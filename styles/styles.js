@@ -1,15 +1,23 @@
 import { createGlobalStyle } from "styled-components";
 
-export default createGlobalStyle`
+const GlobalStyle = createGlobalStyle`
+  @font-face {
+  font-family: "NewOrderNormal";
+  src: url("./fonts/New-Order-Regular.otf");
+  }
+
+  @font-face {
+  font-family: "NewOrderBold";
+  src: url("./fonts/New-Order-Bold.otf");
+  }
+
+  @font-face {
+  font-family: "NewOrderLight";
+  src: url("./fonts/New-Order-Light.otf");
+  }
+
   
   :root{
-    --primary-background: #b6bfc1;
-    --primary-accent: #929a9c;
-    --accent: #f15a30;
-    --secondary: white;
-    --headline-font: Oxygen;
-    --content-font: NotoSerif;
-    
     font-size: 18px;
   }
 
@@ -19,14 +27,10 @@ export default createGlobalStyle`
     box-sizing: border-box;
     text-decoration: none;
     margin: 0;
-    font-family: var(--content-font);
     padding: 0;
-    background-color: var(--primary-background);
-    color: black;
   }
   h1 {
-    font-family: var(--headline-font);
-    color: var(--primary-accent);
+    font-family: NewOrderLight;
   }
   h2 {
     font-family: var(--headline-font);
@@ -35,3 +39,4 @@ export default createGlobalStyle`
     line-height: 1.8;
   }
 `;
+export default GlobalStyle;
