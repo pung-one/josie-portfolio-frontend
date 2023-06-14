@@ -70,13 +70,13 @@ export default function Home({ posts, deviceType }) {
                 artwork={artwork}
               />
             ) : (
-              <Link href={`${artwork.slug}`}>
+              <StyledLink href={`${artwork.slug}`}>
                 <TitleImage
                   onShowDetails={handleShowDetails}
                   image={artwork.titleImage}
                   slug={artwork.slug}
                 />
-              </Link>
+              </StyledLink>
             )}
           </ArtworkSection>
         );
@@ -104,7 +104,6 @@ const ArtworkSection = styled.section`
   display: flex;
   justify-content: center;
   width: 100%;
-  height: fit-content;
   padding: 15vh 0;
   &:after {
     content: "";
@@ -114,6 +113,10 @@ const ArtworkSection = styled.section`
     width: 80%;
     background-color: black;
   }
+`;
+
+const StyledLink = styled(Link)`
+  width: fit-content;
 `;
 
 export async function getStaticProps() {
