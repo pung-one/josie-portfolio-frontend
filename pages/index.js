@@ -3,7 +3,7 @@ import client from "@/apollo-client";
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
 import Artwork from "@/components/Artwork";
-import TitleImage from "@/components/TitleImage";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function Home({ posts, deviceType }) {
@@ -71,10 +71,12 @@ export default function Home({ posts, deviceType }) {
               />
             ) : (
               <Link href={`${artwork.slug}`}>
-                <TitleImage
-                  onShowDetails={handleShowDetails}
-                  image={artwork.titleImage}
-                  slug={artwork.slug}
+                <StyledImage
+                  alt={artwork.slug}
+                  src={artwork.titleImage.url}
+                  width={artwork.titleImage.width}
+                  height={artwork.titleImage.height}
+                  onClick={() => onShowDetails(slug)}
                 />
               </Link>
             )}
@@ -95,8 +97,8 @@ const PageContainer = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: auto;
   max-width: 1200px;
+  margin: auto;
 `;
 
 const ArtworkSection = styled.section`
@@ -104,7 +106,7 @@ const ArtworkSection = styled.section`
   display: flex;
   justify-content: center;
   width: 100%;
-  padding: 15vh 0;
+  padding: 15vh 10px;
   &:after {
     content: "";
     position: absolute;
@@ -112,6 +114,15 @@ const ArtworkSection = styled.section`
     height: 1px;
     width: 80%;
     background-color: black;
+  }
+`;
+
+const StyledImage = styled(Image)`
+  object-fit: cover;
+  width: 90vw;
+  box-shadow: 0 0 40px grey;
+  &:hover {
+    cursor: pointer;
   }
 `;
 
