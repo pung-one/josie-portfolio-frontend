@@ -3,28 +3,21 @@ import Image from "next/image";
 
 export default function TitleImage({ onShowDetails, image, slug }) {
   return (
-    <TitleImageContainer key={slug}>
-      <StyledImage
-        alt={slug}
-        src={image.url}
-        width={image.width}
-        height={image.height}
-        onClick={() => onShowDetails(slug)}
-      />
-    </TitleImageContainer>
+    <StyledImage
+      alt={slug}
+      src={image.url}
+      width={image.width}
+      height={image.height}
+      onClick={() => onShowDetails(slug)}
+    />
   );
 }
-
-const TitleImageContainer = styled.section`
-  height: 60vh;
-  width: fit-content;
-  box-shadow: 0 0 40px grey;
-`;
 
 const StyledImage = styled(Image)`
   object-fit: contain;
   width: 100%;
-  height: 100%;
+  height: 65vh;
+  box-shadow: 0 0 40px grey;
   &:hover {
     cursor: pointer;
   }

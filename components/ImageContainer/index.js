@@ -16,7 +16,7 @@ export default function ImageContainer({ image, slug }) {
 }
 
 const Container = styled.section`
-  height: 60vh;
+  height: 65vh;
   width: fit-content;
   box-shadow: 0 0 40px grey;
 `;
