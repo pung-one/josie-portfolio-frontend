@@ -119,6 +119,7 @@ const ArtworkSection = styled.section`
 
 const StyledImage = styled(Image)`
   object-fit: cover;
+  height: fit-content;
   width: 90vw;
   box-shadow: 0 0 40px grey;
   &:hover {
