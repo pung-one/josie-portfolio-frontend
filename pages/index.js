@@ -1,49 +1,85 @@
 import { gql } from "@apollo/client";
 import client from "@/apollo-client";
 import { styled } from "styled-components";
-import Image from "next/image";
 import { useEffect, useState } from "react";
+import Artwork from "@/components/Artwork";
+import TitleImage from "@/components/TitleImage";
 import Link from "next/link";
 
 export default function Home({ posts, deviceType }) {
-  const [images, setImages] = useState([]);
+  const [showDetails, setShowDetails] = useState("none");
+  const [artworks, setArtworks] = useState([]);
+
+  function handleShowDetails(slug) {
+    setShowDetails(slug);
+  }
+
+  function handleCloseDetails() {
+    setShowDetails("none");
+  }
 
   useEffect(() => {
-    setImages(
+    setArtworks(
       posts.map(({ attributes }) => {
-        const imageSrc = attributes.Titelbild.data.attributes.formats;
-        const slug = attributes.slug;
+        const artwork = {
+          title: attributes.Titel,
+          description: attributes.Beschreibung,
+          year: attributes.Jahr,
+          slug: attributes.slug,
+        };
+        const titleImage = attributes.Titelbild.data.attributes.formats;
+        const images = attributes.Bilder.data.map(
+          (image) => image.attributes.formats
+        );
+
         if (deviceType == "mobile") {
-          return { imageSrc: imageSrc.small, slug: slug };
+          return {
+            ...artwork,
+            titleImage: titleImage.small,
+            images: images.map((image) => image.small),
+          };
         } else if (deviceType == "tablet") {
-          return { imageSrc: imageSrc.medium, slug: slug };
+          return {
+            ...artwork,
+            titleImage: titleImage.medium,
+            images: images.map((image) => image.medium),
+          };
         } else if (deviceType == "desktop") {
-          return { imageSrc: imageSrc.large, slug: slug };
+          return {
+            ...artwork,
+            titleImage: titleImage.large,
+            images: images.map((image) => image.large),
+          };
         }
       })
     );
   }, [deviceType]);
 
-  if (!images[0]) return <LoadingMessage>Loading..</LoadingMessage>;
-
-  console.log(images);
+  if (!artworks[0]) return <LoadingMessage>Loading..</LoadingMessage>;
 
   return (
     <PageContainer>
       <h1>Josie Overton</h1>
-      {images?.map(({ imageSrc, slug }) => {
-        console.log(imageSrc);
+      {artworks?.map((artwork) => {
         return (
-          <ImageContainer key={slug}>
-            <Link href={`/${slug}`}>
-              <StyledImage
-                alt={slug}
-                src={imageSrc.url}
-                width={imageSrc.width}
-                height={imageSrc.height}
+          <ArtworkSection key={artwork.slug}>
+            {deviceType === "desktop" ? (
+              <Artwork
+                showDetails={showDetails}
+                handleShowDetails={handleShowDetails}
+                handleCloseDetails={handleCloseDetails}
+                artwork={artwork}
               />
-            </Link>
-          </ImageContainer>
+            ) : (
+              <Link href={`${artwork.slug}`}>
+                <TitleImage
+                  onShowDetails={handleShowDetails}
+                  image={artwork.titleImage}
+                  slug={artwork.slug}
+                />
+              </Link>
+            )}
+          </ArtworkSection>
         );
       })}
     </PageContainer>
@@ -60,18 +96,25 @@ const PageContainer = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20vh;
+  margin: auto;
+  max-width: 1200px;
 `;
 
-const ImageContainer = styled.div`
+const ArtworkSection = styled.section`
   position: relative;
-  height: 70vh;
-`;
-
-const StyledImage = styled(Image)`
-  object-fit: cover;
+  display: flex;
+  justify-content: center;
   width: 100%;
-  height: 100%;
+  height: fit-content;
+  padding: 8vh 0;
+  &:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    height: 1px;
+    width: 80%;
+    background-color: black;
+  }
 `;
 
 export async function getStaticProps() {
@@ -81,7 +124,17 @@ export async function getStaticProps() {
         artworks {
           data {
             attributes {
+              Titel
+              Beschreibung
+              Jahr
               slug
+              Bilder {
+                data {
+                  attributes {
+                    formats
+                  }
+                }
+              }
               Titelbild {
                 data {
                   attributes {

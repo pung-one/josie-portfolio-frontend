@@ -28,6 +28,7 @@ const GlobalStyle = createGlobalStyle`
     text-decoration: none;
     margin: 0;
     padding: 0;
+    font-family: NewOrderLight;
   }
   h1 {
     font-family: NewOrderLight;
@@ -37,6 +38,10 @@ const GlobalStyle = createGlobalStyle`
   }
   p {
     line-height: 1.8;
+  }
+  a {
+    text-decoration: underline;
+    color: black;
   }
 `;
 export default GlobalStyle;
