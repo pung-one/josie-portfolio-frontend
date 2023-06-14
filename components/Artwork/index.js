@@ -21,7 +21,7 @@ export default function Artwork({
         />
         {showDetails === slug
           ? images.map((image) => {
-              return <ImageContainer image={image} slug={slug} />;
+              return <ImageContainer key={slug} image={image} slug={slug} />;
             })
           : ""}
       </ImagesContainer>
