@@ -1,6 +1,7 @@
 import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
+
   @font-face {
   font-family: "NewOrderNormal";
   src: url("./fonts/New-Order-Regular.otf");
@@ -32,6 +33,7 @@ const GlobalStyle = createGlobalStyle`
   }
   h1 {
     font-family: NewOrderLight;
+    font-size: 3.5vh;
   }
   h2 {
     font-family: var(--headline-font);

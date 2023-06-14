@@ -57,7 +57,7 @@ const DetailsContainer = styled.aside`
   max-width: ${({ show, slug }) => (show === slug ? "100vw" : "0")};
   max-height: ${({ show, slug }) => (show === slug ? "100vh" : "0")};
   overflow: hidden;
-  transition: max-width 1s ease-in-out, max-height 1s ease-in-out;
+  transition: max-width 0.6s ease-in-out, max-height 0.6s ease-in-out;
 `;
 
 const Title = styled.h2`

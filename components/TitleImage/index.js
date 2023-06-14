@@ -16,7 +16,7 @@ export default function TitleImage({ onShowDetails, image, slug }) {
 }
 
 const TitleImageContainer = styled.section`
-  height: 80vh;
+  height: 60vh;
   width: fit-content;
   box-shadow: 0 0 40px grey;
 `;

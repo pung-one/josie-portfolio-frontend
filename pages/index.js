@@ -59,7 +59,6 @@ export default function Home({ posts, deviceType }) {
 
   return (
     <PageContainer>
-      <h1>Josie Overton</h1>
       {artworks?.map((artwork) => {
         return (
           <ArtworkSection key={artwork.slug}>
@@ -106,7 +105,7 @@ const ArtworkSection = styled.section`
   justify-content: center;
   width: 100%;
   height: fit-content;
-  padding: 8vh 0;
+  padding: 15vh 0;
   &:after {
     content: "";
     position: absolute;

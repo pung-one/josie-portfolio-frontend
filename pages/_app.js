@@ -1,4 +1,5 @@
 import GlobalStyle from "@/styles/styles";
+import Layout from "@/components/Layout";
 import { useEffect, useState } from "react";
 
 export default function App({ Component, pageProps }) {
@@ -30,7 +31,9 @@ export default function App({ Component, pageProps }) {
   return (
     <>
       <GlobalStyle />
-      <Component {...pageProps} deviceType={deviceType} />
+      <Layout>
+        <Component {...pageProps} deviceType={deviceType} />
+      </Layout>
     </>
   );
 }
