@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Artwork from "@/components/Artwork";
 import Image from "next/image";
 import Link from "next/link";
+import uuid from "react-uuid";
 
 export default function Home({ posts, deviceType }) {
   const [showDetails, setShowDetails] = useState("none");
@@ -32,34 +33,32 @@ export default function Home({ posts, deviceType }) {
           (image) => image.attributes.formats
         );
 
-        if (deviceType == "mobile") {
-          return {
-            ...artwork,
-            titleImage: titleImage.small,
-            images: images.map((image) => image.small),
-          };
-        } else if (deviceType == "tablet") {
-          return {
-            ...artwork,
-            titleImage: titleImage.medium,
-            images: images.map((image) => image.medium),
-          };
-        } else if (deviceType == "desktop") {
-          return {
-            ...artwork,
-            titleImage: titleImage.large,
-            images: images.map((image) => image.large),
-          };
-        }
+        return {
+          ...artwork,
+          titleImage:
+            deviceType === "desktop" && titleImage.large
+              ? titleImage.large
+              : deviceType === "mobile" && titleImage.small
+              ? titleImage.small
+              : titleImage.medium,
+          images: images.map((image) =>
+            deviceType === "desktop" && image.large
+              ? { ...image.large }
+              : deviceType === "mobile" && image.small
+              ? { ...image.small }
+              : { ...image.medium }
+          ),
+        };
       })
     );
   }, [deviceType]);
 
-  if (!artworks[0]) return <LoadingMessage>Loading..</LoadingMessage>;
-
   return (
     <PageContainer>
       {artworks?.map((artwork) => {
+        if (!artwork) {
+          return null;
+        }
         return (
           <ArtworkSection key={artwork.slug}>
             {deviceType === "desktop" ? (
@@ -76,7 +75,6 @@ export default function Home({ posts, deviceType }) {
                   src={artwork.titleImage.url}
                   width={artwork.titleImage.width}
                   height={artwork.titleImage.height}
-                  onClick={() => onShowDetails(slug)}
                 />
               </Link>
             )}
@@ -98,6 +96,7 @@ const PageContainer = styled.main`
   flex-direction: column;
   align-items: center;
   max-width: 1200px;
+  padding-top: 8vh;
   margin: auto;
 `;
 
@@ -106,7 +105,7 @@ const ArtworkSection = styled.section`
   display: flex;
   justify-content: center;
   width: 100%;
-  padding: 15vh 10px;
+  padding: 10vh;
   &:after {
     content: "";
     position: absolute;
@@ -124,6 +123,7 @@ const StyledImage = styled(Image)`
   box-shadow: 0 0 40px grey;
   &:hover {
     cursor: pointer;
+    box-shadow: 0 0 60px grey;
   }
 `;
 

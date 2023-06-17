@@ -2,9 +2,9 @@ import { gql } from "@apollo/client";
 import client from "@/apollo-client";
 import { styled } from "styled-components";
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import ReactImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
+import { TfiAngleLeft, TfiAngleRight } from "react-icons/tfi";
 
 export default function DetailPage({ artworkData, deviceType }) {
   const [images, setImages] = useState([]);
@@ -13,41 +13,67 @@ export default function DetailPage({ artworkData, deviceType }) {
   useEffect(() => {
     setImages(
       Bilder.data.map((image) => {
-        console.log(image);
-        const imgData = { thumbnail: image.attributes.formats.thumbnail.url };
-        if (deviceType == "mobile") {
-          return {
-            ...imgData,
-            original: image.attributes.formats.small.url,
-          };
-        } else if (deviceType == "tablet") {
-          return {
-            ...imgData,
-            original: image.attributes.formats.medium.url,
-          };
-        } else if (deviceType == "desktop") {
-          return {
-            ...imgData,
-            original: image.attributes.formats.large.url,
-          };
+        if (!image) {
+          return null;
         }
+        const imgData = image.attributes.formats;
+
+        return {
+          thumbnail: imgData.thumbnail.url,
+          original:
+            deviceType === "large" && imgData.large
+              ? imgData.large.url
+              : deviceType === "mobile" && imgData.small
+              ? imgData.small.url
+              : imgData.medium.url,
+        };
       })
     );
   }, [deviceType]);
-  console.log(images);
 
   if (!images[0]) return <h1>Loading..</h1>;
 
   return (
     <PageContainer>
-      <ReactImageGallery
-        items={images}
-        showNav={true}
-        showThumbnails={false}
-        showFullscreenButton={false}
-        showPlayButton={false}
-        showBullets={true}
-      />
+      <GalleryContainer>
+        <ReactImageGallery
+          items={images}
+          showNav={true}
+          showThumbnails={false}
+          showFullscreenButton={true}
+          showPlayButton={false}
+          showBullets={true}
+          slideDuration={300}
+          flickThreshold={0.6}
+          swipeThreshold={40}
+          renderLeftNav={(onClick, disabled) => {
+            return (
+              <button
+                type="button"
+                className="image-gallery-icon image-gallery-left-nav"
+                aria-label="Previous Slide"
+                disabled={disabled}
+                onClick={onClick}
+              >
+                <TfiAngleLeft size={30} color="#fff" />
+              </button>
+            );
+          }}
+          renderRightNav={(onClick, disabled) => {
+            return (
+              <button
+                type="button"
+                className="image-gallery-icon image-gallery-right-nav"
+                aria-label="Next Slide"
+                disabled={disabled}
+                onClick={onClick}
+              >
+                <TfiAngleRight size={30} color="#fff" />
+              </button>
+            );
+          }}
+        />
+      </GalleryContainer>
       <DetailsContainer>
         <Title>
           {Titel} - {Jahr}
@@ -61,35 +87,32 @@ export default function DetailPage({ artworkData, deviceType }) {
 const PageContainer = styled.main`
   position: relative;
   padding-top: 8vh;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 `;
 
-const ImageSlide = styled.section`
+const GalleryContainer = styled.aside`
   position: relative;
-  max-width: 100vw;
-  overflow-x: scroll;
-`;
-
-const StyledImage = styled(Image)`
-  position: relative;
-  object-fit: contain;
-  width: 100%;
-  height: 100%;
-  display: inline;
+  width: 50%;
+  min-width: fit-content;
 `;
 
 const DetailsContainer = styled.aside`
   position: relative;
-  max-width: 600px;
-  padding: 15vh 20px;
+  width: 100%;
+  max-width: 540px;
+  padding: 50px 20px;
   margin: 0 auto;
 `;
 
-const Title = styled.h2`
-  margin: 0 0 30px;
+const Title = styled.h1`
+  margin: 0 0 5vh;
 `;
 
 const Description = styled.p`
-  padding: 0 4vw;
+  max-width: 400px;
+  margin: 0 auto;
 `;
 
 export async function getStaticPaths() {

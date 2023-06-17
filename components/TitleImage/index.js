@@ -1,7 +1,7 @@
-import { styled } from "styled-components";
+import { styled, css } from "styled-components";
 import Image from "next/image";
 
-export default function TitleImage({ onShowDetails, image, slug }) {
+export default function TitleImage({ onShowDetails, image, slug, isOpen }) {
   return (
     <StyledImage
       alt={slug}
@@ -9,16 +9,25 @@ export default function TitleImage({ onShowDetails, image, slug }) {
       width={image.width}
       height={image.height}
       onClick={() => onShowDetails(slug)}
+      $isOpen={isOpen}
     />
   );
 }
 
 const StyledImage = styled(Image)`
   object-fit: contain;
-  width: 100%;
-  height: 65vh;
-  box-shadow: 0 0 40px grey;
-  &:hover {
-    cursor: pointer;
-  }
+  width: fit-content;
+  height: fit-content;
+  max-height: 70vh;
+  box-shadow: 0 0 20px grey;
+  transition: box-shadow 0.2s;
+  ${(props) =>
+    !props.$isOpen
+      ? css`
+          &:hover {
+            cursor: pointer;
+            box-shadow: 0 0 40px grey;
+          }
+        `
+      : null}
 `;

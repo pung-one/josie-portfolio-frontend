@@ -5,10 +5,12 @@ export default function Layout({ children }) {
   return (
     <>
       <Header>
-        <StyledLink href={"/"}>
-          <Headline>Josie Overton</Headline>
-        </StyledLink>
-        <StyledLink href={"/info"}>Info</StyledLink>
+        <Link href={"/"} passHref legacyBehavior>
+          <StyledLink>Josie Overton</StyledLink>
+        </Link>
+        <Link href={"/"} passHref legacyBehavior>
+          <StyledLink>Info</StyledLink>
+        </Link>
       </Header>
       {children}
     </>
@@ -26,9 +28,7 @@ const Header = styled.header`
   border-bottom: 1px solid black;
 `;
 
-const Headline = styled.h1``;
-
-const StyledLink = styled(Link)`
+const StyledLink = styled.a`
   text-decoration: none;
   margin: 0 20px;
 `;
