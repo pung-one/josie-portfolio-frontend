@@ -33,14 +33,19 @@ export default function Artwork({
           showDetails={showDetails}
           onCloseDetails={handleCloseDetails}
         />
-        <Link href={`/${slug}`} style={{ display: "inline-block" }}>
-          <Title>
-            {title}
-            {" - "}
-            {year}
-          </Title>
-        </Link>
-        <Description>{description}</Description>
+        <Details>
+          <Link href={`/${slug}`} style={{ display: "inline-block" }}>
+            <h2>
+              {title}
+              {" - "}
+              {year}
+            </h2>
+          </Link>
+          <Description>{description}</Description>
+          <br />
+          <br />
+          <Link href={`/${slug}`}>Read more</Link>
+        </Details>
       </DetailsContainer>
     </>
   );
@@ -51,26 +56,26 @@ const ImagesContainer = styled.aside`
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 50%;
-  gap: 50px;
+  width: 50%;
+  gap: 100px;
   margin: 0 auto;
   position: relative;
 `;
 
 const DetailsContainer = styled.section`
   position: relative;
-  width: 100%;
+  width: 50%;
   max-width: ${({ $show }) => ($show ? "2000px" : "0")};
   max-height: ${({ $show }) => ($show ? "4000px" : "0")};
   overflow: hidden;
   transition: max-width 0.8s ease, max-height 0.4s ease;
 `;
 
-const Title = styled.h2`
-  margin: 0 0 5vh 10vw;
+const Details = styled.article`
+  max-width: 400px;
+  margin: 0 0 0 auto;
 `;
 
 const Description = styled.p`
-  max-width: 400px;
-  margin: 0 0 0 auto;
+  margin-top: 5vh;
 `;

@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import Artwork from "@/components/Artwork";
 import Image from "next/image";
 import Link from "next/link";
-import uuid from "react-uuid";
 
 export default function Home({ posts, deviceType }) {
   const [showDetails, setShowDetails] = useState("none");
@@ -105,7 +104,7 @@ const ArtworkSection = styled.section`
   display: flex;
   justify-content: center;
   width: 100%;
-  padding: 10vh;
+  padding: 10vh 20px;
   &:after {
     content: "";
     position: absolute;
@@ -128,40 +127,46 @@ const StyledImage = styled(Image)`
 `;
 
 export async function getStaticProps() {
-  const { data } = await client.query({
-    query: gql`
-      query {
-        artworks {
-          data {
-            attributes {
-              Titel
-              Beschreibung
-              Jahr
-              slug
-              Bilder {
-                data {
-                  attributes {
-                    formats
+  try {
+    const { data, error } = await client.query({
+      query: gql`
+        query {
+          artworks {
+            data {
+              attributes {
+                Titel
+                Beschreibung
+                Jahr
+                slug
+                Bilder {
+                  data {
+                    attributes {
+                      formats
+                    }
                   }
                 }
-              }
-              Titelbild {
-                data {
-                  attributes {
-                    formats
+                Titelbild {
+                  data {
+                    attributes {
+                      formats
+                    }
                   }
                 }
               }
             }
           }
         }
-      }
-    `,
-  });
-
-  return {
-    props: {
-      posts: data.artworks.data,
-    },
-  };
+      `,
+    });
+    if (error || !data) {
+      return { notFound: true };
+    }
+    return {
+      props: {
+        posts: data.artworks.data,
+      },
+    };
+  } catch (error) {
+    return { notFound: true };
+  }
 }
