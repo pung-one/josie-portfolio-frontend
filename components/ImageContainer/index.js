@@ -17,6 +17,5 @@ const StyledImage = styled(Image)`
   width: fit-content;
   height: fit-content;
   max-height: 70vh;
-  max-width: 100%;
   box-shadow: 0 0 40px grey;
 `;
