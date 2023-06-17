@@ -75,7 +75,6 @@ export default function Home({ posts, deviceType }) {
                   src={artwork.titleImage.url}
                   width={artwork.titleImage.width}
                   height={artwork.titleImage.height}
-                  onClick={() => onShowDetails(slug)}
                 />
               </Link>
             )}
@@ -97,6 +96,7 @@ const PageContainer = styled.main`
   flex-direction: column;
   align-items: center;
   max-width: 1200px;
+  padding-top: 8vh;
   margin: auto;
 `;
 
@@ -105,7 +105,7 @@ const ArtworkSection = styled.section`
   display: flex;
   justify-content: center;
   width: 100%;
-  padding: 15vh 10px;
+  padding: 10vh;
   &:after {
     content: "";
     position: absolute;
@@ -123,6 +123,7 @@ const StyledImage = styled(Image)`
   box-shadow: 0 0 40px grey;
   &:hover {
     cursor: pointer;
+    box-shadow: 0 0 60px grey;
   }
 `;
 

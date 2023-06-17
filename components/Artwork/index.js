@@ -20,6 +20,7 @@ export default function Artwork({
           onShowDetails={handleShowDetails}
           image={titleImage}
           slug={slug}
+          isOpen={showDetails === slug}
         />
         {showDetails === slug
           ? images.map((image) => {
@@ -59,14 +60,14 @@ const ImagesContainer = styled.aside`
 const DetailsContainer = styled.section`
   position: relative;
   width: 100%;
-  max-width: ${({ $show }) => ($show ? "100vw" : "0")};
-  max-height: ${({ $show }) => ($show ? "200vh" : "0")};
+  max-width: ${({ $show }) => ($show ? "2000px" : "0")};
+  max-height: ${({ $show }) => ($show ? "4000px" : "0")};
   overflow: hidden;
-  transition: max-width 1s ease-in-out, max-height 1s ease-in-out;
+  transition: max-width 0.8s ease, max-height 0.4s ease;
 `;
 
 const Title = styled.h2`
-  margin: 0 0 5vh 8vw;
+  margin: 0 0 5vh 10vw;
 `;
 
 const Description = styled.p`

@@ -8,7 +8,7 @@ export default function Layout({ children }) {
         <Link href={"/"} passHref legacyBehavior>
           <StyledLink>Josie Overton</StyledLink>
         </Link>
-        <Link href={"/info"} passHref legacyBehavior>
+        <Link href={"/"} passHref legacyBehavior>
           <StyledLink>Info</StyledLink>
         </Link>
       </Header>

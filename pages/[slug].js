@@ -13,7 +13,6 @@ export default function DetailPage({ artworkData, deviceType }) {
   useEffect(() => {
     setImages(
       Bilder.data.map((image) => {
-        console.log(image);
         if (!image) {
           return null;
         }
