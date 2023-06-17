@@ -2,6 +2,8 @@ import { styled } from "styled-components";
 import TitleImage from "../TitleImage";
 import ImageContainer from "../ImageContainer";
 import CloseDetailsButton from "@/components/CloseDetailsButton";
+import uuid from "react-uuid";
+import Link from "next/link";
 
 export default function Artwork({
   artwork,
@@ -21,20 +23,22 @@ export default function Artwork({
         />
         {showDetails === slug
           ? images.map((image) => {
-              return <ImageContainer key={slug} image={image} slug={slug} />;
+              return <ImageContainer key={uuid()} image={image} slug={slug} />;
             })
           : ""}
       </ImagesContainer>
-      <DetailsContainer show={showDetails} slug={slug}>
+      <DetailsContainer $show={showDetails === slug}>
         <CloseDetailsButton
           showDetails={showDetails}
           onCloseDetails={handleCloseDetails}
         />
-        <Title>
-          {title}
-          {" - "}
-          {year}
-        </Title>
+        <Link href={`/${slug}`} style={{ display: "inline-block" }}>
+          <Title>
+            {title}
+            {" - "}
+            {year}
+          </Title>
+        </Link>
         <Description>{description}</Description>
       </DetailsContainer>
     </>
@@ -46,22 +50,26 @@ const ImagesContainer = styled.aside`
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 50%;
   gap: 50px;
   margin: 0 auto;
   position: relative;
 `;
 
-const DetailsContainer = styled.aside`
+const DetailsContainer = styled.section`
   position: relative;
-  width: 35%;
-  max-width: ${({ show, slug }) => (show === slug ? "100vw" : "0")};
-  max-height: ${({ show, slug }) => (show === slug ? "100vh" : "0")};
+  width: 100%;
+  max-width: ${({ $show }) => ($show ? "100vw" : "0")};
+  max-height: ${({ $show }) => ($show ? "200vh" : "0")};
   overflow: hidden;
-  transition: max-width 0.6s ease-in-out, max-height 0.6s ease-in-out;
+  transition: max-width 1s ease-in-out, max-height 1s ease-in-out;
 `;
 
 const Title = styled.h2`
-  margin-bottom: 50px;
+  margin: 0 0 5vh 8vw;
 `;
 
-const Description = styled.p``;
+const Description = styled.p`
+  max-width: 400px;
+  margin: 0 0 0 auto;
+`;

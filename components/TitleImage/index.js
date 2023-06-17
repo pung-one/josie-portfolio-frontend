@@ -15,8 +15,9 @@ export default function TitleImage({ onShowDetails, image, slug }) {
 
 const StyledImage = styled(Image)`
   object-fit: contain;
-  width: 100%;
-  height: 65vh;
+  width: fit-content;
+  height: fit-content;
+  max-height: 70vh;
   box-shadow: 0 0 40px grey;
   &:hover {
     cursor: pointer;
