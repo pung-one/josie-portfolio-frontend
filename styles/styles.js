@@ -19,7 +19,7 @@ const GlobalStyle = createGlobalStyle`
 
   
   :root{
-    font-size: 18px;
+    font-size: 20px;
   }
 
   *,
@@ -32,8 +32,7 @@ const GlobalStyle = createGlobalStyle`
     font-family: NewOrderLight;
   }
   h1 {
-    font-family: NewOrderLight;
-    font-size: 3.5vh;
+    font-size: 2rem;
   }
   h2 {
     font-family: var(--headline-font);
@@ -45,5 +44,18 @@ const GlobalStyle = createGlobalStyle`
     text-decoration: underline;
     color: black;
   }
+
+  .image-gallery{
+    position: relative;
+    max-width: 540px;
+    margin: 6vh auto;
+    
+  }
+  .image-gallery img{
+    margin: auto;
+    width: fit-content;
+    height: 80vh;
+  }
+
 `;
 export default GlobalStyle;
