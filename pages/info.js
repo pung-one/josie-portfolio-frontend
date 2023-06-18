@@ -78,11 +78,14 @@ export default function InfoPage({ aboutData, deviceType }) {
             {workData.upcomingExhibitions[0] && (
               <ExhiContainer>
                 <ExhiHeadline>kommende Ausstellungen</ExhiHeadline>
-                {workData.ExhiContainerExhibitions.map((exhi) => {
-                  <ExhiSection>
-                    <ExhiYear>{exhi.attributes.Jahr}</ExhiYear>
-                    <ExhiPlace>{exhi.attributes.Ausstellung}</ExhiPlace>
-                  </ExhiSection>;
+                {workData.upcomingExhibitions.map((exhi) => {
+                  console.log(exhi);
+                  return (
+                    <ExhiSection>
+                      <ExhiYear>{exhi.attributes.Jahr}</ExhiYear>
+                      <ExhiPlace>{exhi.attributes.Ausstellung}</ExhiPlace>
+                    </ExhiSection>
+                  );
                 })}
               </ExhiContainer>
             )}
