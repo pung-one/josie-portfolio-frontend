@@ -18,14 +18,17 @@ const StyledImage = styled(Image)`
   object-fit: contain;
   width: 580px;
   height: fit-content;
-  box-shadow: 0 0 30px grey;
-  transition: box-shadow 0.2s;
+  /* box-shadow: 0 0 30px grey; */
+  /* transition: box-shadow 0.1s; */
+  transition: transform 0.3s, box-shadow 0.1s;
+
   ${(props) =>
     !props.$isOpen
       ? css`
           &:hover {
             cursor: pointer;
-            box-shadow: 0 0 50px grey;
+            box-shadow: 0 0 7px grey;
+            transform: scale(1.009);
           }
         `
       : null}

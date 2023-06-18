@@ -8,11 +8,23 @@ import { TfiAngleLeft, TfiAngleRight } from "react-icons/tfi";
 
 export default function DetailPage({ artworkData, deviceType }) {
   const [images, setImages] = useState([]);
+
   const { Titel, Jahr, Titelbild, Bilder, Beschreibung } =
     artworkData.attributes;
+
   useEffect(() => {
-    setImages(
-      Bilder.data.map((image) => {
+    const titelbildData = Titelbild.data.attributes.formats;
+    setImages([
+      {
+        thumbnail: titelbildData.thumbnail,
+        original:
+          deviceType === "large" && titelbildData.large
+            ? titelbildData.large.url
+            : deviceType === "mobile" && titelbildData.small
+            ? titelbildData.small.url
+            : titelbildData.medium.url,
+      },
+      ...Bilder.data.map((image) => {
         if (!image) {
           return null;
         }
@@ -27,8 +39,8 @@ export default function DetailPage({ artworkData, deviceType }) {
               ? imgData.small.url
               : imgData.medium.url,
         };
-      })
-    );
+      }),
+    ]);
   }, [deviceType]);
 
   if (!images[0]) return <h1>Loading..</h1>;
@@ -86,7 +98,7 @@ export default function DetailPage({ artworkData, deviceType }) {
 
 const PageContainer = styled.main`
   position: relative;
-  padding-top: 8vh;
+  padding-top: 6vh;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -138,8 +150,9 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const { data } = await client.query({
-    query: gql`
+  try {
+    const { data, error } = await client.query({
+      query: gql`
       query {
         artworks (
             sort: "publishedAt:desc"
@@ -171,11 +184,18 @@ export async function getStaticProps({ params }) {
         }
       }
     `,
-  });
+    });
 
-  return {
-    props: {
-      artworkData: data.artworks.data[0],
-    },
-  };
+    if (error || !data) {
+      return { notFound: true };
+    }
+
+    return {
+      props: {
+        artworkData: data.artworks.data[0],
+      },
+    };
+  } catch (error) {
+    return { notFound: true };
+  }
 }

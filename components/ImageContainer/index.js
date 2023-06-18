@@ -16,5 +16,5 @@ const StyledImage = styled(Image)`
   object-fit: contain;
   width: 100%;
   height: fit-content;
-  box-shadow: 0 0 30px grey;
+  /* box-shadow: 0 0 30px grey; */
 `;

@@ -9,7 +9,7 @@ import Link from "next/link";
 export default function Home({ posts, deviceType }) {
   const [showDetails, setShowDetails] = useState("none");
   const [artworks, setArtworks] = useState([]);
-
+  console.log(posts);
   function handleShowDetails(slug) {
     setShowDetails(slug);
   }
@@ -84,18 +84,13 @@ export default function Home({ posts, deviceType }) {
   );
 }
 
-const LoadingMessage = styled.h1`
-  width: 100%;
-  text-align: center;
-`;
-
 const PageContainer = styled.main`
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   max-width: 1200px;
-  padding-top: 8vh;
+  padding-top: 6vh;
   margin: auto;
 `;
 
@@ -122,7 +117,6 @@ const StyledImage = styled(Image)`
   box-shadow: 0 0 40px grey;
   &:hover {
     cursor: pointer;
-    box-shadow: 0 0 60px grey;
   }
 `;
 

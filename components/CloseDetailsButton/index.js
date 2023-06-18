@@ -14,4 +14,20 @@ const CloseButton = styled.button`
   &:hover {
     cursor: pointer;
   }
+  &:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    bottom: 0;
+    right: 0;
+    background-color: black;
+    transition: transform 0.2s ease-out;
+  }
+  &:hover:after {
+    transform: scaleX(1);
+    transform-origin: bottom right;
+  }
 `;

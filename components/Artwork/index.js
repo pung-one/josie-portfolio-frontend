@@ -68,7 +68,7 @@ const DetailsContainer = styled.section`
   max-width: ${({ $show }) => ($show ? "2000px" : "0")};
   max-height: ${({ $show }) => ($show ? "4000px" : "0")};
   overflow: hidden;
-  transition: max-width 0.8s ease, max-height 0.4s ease;
+  transition: max-width 0.8s ease-in, max-height 0.4s ease-out;
 `;
 
 const Details = styled.article`

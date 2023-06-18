@@ -6,9 +6,9 @@ export default function Layout({ children }) {
     <>
       <Header>
         <Link href={"/"} passHref legacyBehavior>
-          <StyledLink>Josie Overton</StyledLink>
+          <StyledHomeLink>Josie Overton</StyledHomeLink>
         </Link>
-        <Link href={"/"} passHref legacyBehavior>
+        <Link href={"/info"} passHref legacyBehavior>
           <StyledLink>Info</StyledLink>
         </Link>
       </Header>
@@ -23,12 +23,34 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 8vh;
+  height: 6vh;
   width: 100%;
   border-bottom: 1px solid black;
 `;
 
-const StyledLink = styled.a`
+const StyledHomeLink = styled.a`
   text-decoration: none;
   margin: 0 20px;
+`;
+
+const StyledLink = styled.a`
+  position: relative;
+  text-decoration: none;
+  margin: 0 20px;
+  &:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    bottom: 0;
+    right: 0;
+    background-color: black;
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.2s ease-out;
+  }
+  &:hover:after {
+    transform: scaleX(1);
+    transform-origin: bottom right;
+  }
 `;
