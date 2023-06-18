@@ -2,6 +2,10 @@ import { gql } from "@apollo/client";
 import client from "@/apollo-client";
 import { styled } from "styled-components";
 import { useState, useEffect } from "react";
+import AboutMe from "@/components/AboutMe";
+import Exhibitions from "@/components/Exhibitions";
+import Contact from "@/components/Contact";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
 export default function InfoPage({ aboutData, deviceType }) {
   const [aboutMe, setAboutMe] = useState({});
@@ -22,10 +26,8 @@ export default function InfoPage({ aboutData, deviceType }) {
     });
   }, [aboutData]);
 
-  console.log(aboutMe);
-  console.log(workData);
-  console.log(contactData);
-  console.log(educationData);
+  if (!aboutMe || !contactData || !educationData || !workData)
+    return <h1>Loading..</h1>;
 
   return (
     <PageContainer>
@@ -53,54 +55,11 @@ export default function InfoPage({ aboutData, deviceType }) {
       </NavContainer>
       <InfoContainer>
         {showInfo === "about-me" ? (
-          <AboutMe>
-            <PersonalData>
-              {aboutMe.Name}, {aboutMe.Geburtsdatum}
-              <br />
-              Geboren in {aboutMe.Geburtsort}
-              <br />
-              Aufgewachsen in {aboutMe.aufgewachsen}
-            </PersonalData>
-            <Description>{aboutMe.Selbstbeschreibung}</Description>
-            <Education>
-              {educationData.map((edu) => (
-                <EduSection>
-                  <EduTime>
-                    <p>{edu.attributes.von}</p> — <p>{edu.attributes.bis}</p>
-                  </EduTime>
-                  <EduPlace>{edu.attributes.Ausbildung}</EduPlace>
-                </EduSection>
-              ))}
-            </Education>
-          </AboutMe>
+          <AboutMe aboutMe={aboutMe} educationData={educationData} />
         ) : showInfo === "exhibitions" ? (
-          <Exhibitions>
-            {workData.upcomingExhibitions[0] && (
-              <ExhiContainer>
-                <ExhiHeadline>kommende Ausstellungen</ExhiHeadline>
-                {workData.upcomingExhibitions.map((exhi) => {
-                  console.log(exhi);
-                  return (
-                    <ExhiSection>
-                      <ExhiYear>{exhi.attributes.Jahr}</ExhiYear>
-                      <ExhiPlace>{exhi.attributes.Ausstellung}</ExhiPlace>
-                    </ExhiSection>
-                  );
-                })}
-              </ExhiContainer>
-            )}
-            <ExhiContainer>
-              <ExhiHeadline>Ausstellungen</ExhiHeadline>
-              {workData.exhibitions.map((exhi) => {
-                return (
-                  <ExhiSection>
-                    <ExhiYear>{exhi.attributes.Jahr}</ExhiYear>
-                    <ExhiPlace>{exhi.attributes.Ausstellung}</ExhiPlace>
-                  </ExhiSection>
-                );
-              })}
-            </ExhiContainer>
-          </Exhibitions>
+          <Exhibitions workData={workData} />
+        ) : showInfo === "contact" ? (
+          <Contact contactData={contactData} />
         ) : (
           ""
         )}
@@ -157,68 +116,6 @@ const InfoContainer = styled.section`
   padding: 0 10px;
 `;
 
-const AboutMe = styled.article`
-  display: flex;
-  flex-direction: column;
-  gap: 100px;
-`;
-
-const PersonalData = styled.p``;
-
-const Description = styled.p``;
-
-const Education = styled.aside`
-  display: flex;
-  flex-direction: column;
-  gap: 50px;
-`;
-
-const EduSection = styled.div`
-  display: flex;
-`;
-
-const EduTime = styled.p`
-  display: flex;
-  justify-content: space-between;
-  padding: 0 20px;
-  width: 30%;
-`;
-
-const EduPlace = styled.p`
-  padding: 0 20px;
-  width: 70%;
-`;
-
-const Exhibitions = styled.article`
-  display: flex;
-  flex-direction: column;
-  gap: 100px;
-`;
-
-const ExhiContainer = styled.section`
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-`;
-
-const ExhiHeadline = styled.h2`
-  margin-bottom: 50px;
-`;
-
-const ExhiSection = styled.div`
-  display: flex;
-`;
-
-const ExhiYear = styled.p`
-  display: flex;
-  width: 30%;
-`;
-
-const ExhiPlace = styled.p`
-  padding: 0 20px;
-  width: 70%;
-`;
-
 export async function getStaticProps() {
   const { data, error } = await client.query({
     query: gql`
@@ -226,10 +123,7 @@ export async function getStaticProps() {
         aboutMe {
           data {
             attributes {
-              Name
-              Geburtsdatum
-              Geburtsort
-              aufgewachsen
+              personalData
               Selbstbeschreibung
             }
           }
@@ -237,11 +131,7 @@ export async function getStaticProps() {
         contact {
           data {
             attributes {
-              Name
-              Strasse
-              plzUndOrt
-              email
-              telefon
+              contactData
             }
           }
         }
@@ -259,6 +149,7 @@ export async function getStaticProps() {
             attributes {
               Jahr
               Ausstellung
+              reihenfolge
             }
           }
         }
@@ -267,6 +158,7 @@ export async function getStaticProps() {
             attributes {
               Jahr
               Ausstellung
+              reihenfolge
             }
           }
         }
@@ -275,6 +167,7 @@ export async function getStaticProps() {
             attributes {
               Jahr
               Location
+              reihenfolge
             }
           }
         }

@@ -9,7 +9,7 @@ import Link from "next/link";
 export default function Home({ posts, deviceType }) {
   const [showDetails, setShowDetails] = useState("none");
   const [artworks, setArtworks] = useState([]);
-  console.log(posts);
+
   function handleShowDetails(slug) {
     setShowDetails(slug);
   }
@@ -24,6 +24,7 @@ export default function Home({ posts, deviceType }) {
         const artwork = {
           title: attributes.Titel,
           description: attributes.Beschreibung,
+          text: attributes.Begleittext,
           year: attributes.Jahr,
           slug: attributes.slug,
         };
@@ -130,8 +131,10 @@ export async function getStaticProps() {
               attributes {
                 Titel
                 Beschreibung
+                Begleittext
                 Jahr
                 slug
+                reihenfolge
                 Bilder {
                   data {
                     attributes {

@@ -5,11 +5,12 @@ import { useState, useEffect } from "react";
 import ReactImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import { TfiAngleLeft, TfiAngleRight } from "react-icons/tfi";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
 export default function DetailPage({ artworkData, deviceType }) {
   const [images, setImages] = useState([]);
 
-  const { Titel, Jahr, Titelbild, Bilder, Beschreibung } =
+  const { Titel, Jahr, Titelbild, Bilder, Beschreibung, Begleittext } =
     artworkData.attributes;
 
   useEffect(() => {
@@ -90,7 +91,12 @@ export default function DetailPage({ artworkData, deviceType }) {
         <Title>
           {Titel} - {Jahr}
         </Title>
-        <Description>{Beschreibung}</Description>
+        <Description>
+          <ReactMarkdown children={Beschreibung} />
+          <br />
+          <br />
+          <ReactMarkdown children={Begleittext} />
+        </Description>
       </DetailsContainer>
     </PageContainer>
   );
@@ -163,6 +169,7 @@ export async function getStaticProps({ params }) {
             attributes {
               Titel
               Beschreibung
+              Begleittext
               Jahr
               slug
               Bilder {
