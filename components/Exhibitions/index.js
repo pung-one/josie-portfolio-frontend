@@ -3,7 +3,6 @@ import uuid from "react-uuid";
 import SortContent from "@/utils/SortContent";
 
 export default function Exhibitions({ workData }) {
-  console.log(workData);
   return (
     <ExhibitionsContainer>
       {workData?.upcomingExhibitions[0] && (
