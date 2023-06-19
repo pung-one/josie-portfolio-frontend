@@ -91,10 +91,10 @@ export default function DetailPage({ artworkData, deviceType }) {
           {Titel} - {Jahr}
         </Title>
         <Description>
-          <ReactMarkdown children={Beschreibung} />
+          <ReactMarkdown>{Beschreibung}</ReactMarkdown>
           <br />
           <br />
-          <ReactMarkdown children={Begleittext} />
+          <ReactMarkdown>{Begleittext}</ReactMarkdown>
         </Description>
       </DetailsContainer>
     </PageContainer>
