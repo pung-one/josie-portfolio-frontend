@@ -1,9 +1,10 @@
-import { styled } from "styled-components";
+import styled from "styled-components";
 import TitleImage from "../TitleImage";
 import ImageContainer from "../ImageContainer";
 import CloseDetailsButton from "@/components/CloseDetailsButton";
 import uuid from "react-uuid";
 import Link from "next/link";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
 export default function Artwork({
   artwork,
@@ -33,14 +34,21 @@ export default function Artwork({
           showDetails={showDetails}
           onCloseDetails={handleCloseDetails}
         />
-        <Link href={`/${slug}`} style={{ display: "inline-block" }}>
-          <Title>
-            {title}
-            {" - "}
-            {year}
-          </Title>
-        </Link>
-        <Description>{description}</Description>
+        <Details>
+          <Link href={`/${slug}`} style={{ display: "inline-block" }}>
+            <h2>
+              {title}
+              {" - "}
+              {year}
+            </h2>
+          </Link>
+          <Description>
+            <ReactMarkdown>{description}</ReactMarkdown>
+          </Description>
+          <br />
+          <br />
+          <StyledLink href={`/${slug}`}>Read more</StyledLink>
+        </Details>
       </DetailsContainer>
     </>
   );
@@ -51,26 +59,49 @@ const ImagesContainer = styled.aside`
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 50%;
-  gap: 50px;
+  width: 50%;
+  gap: 100px;
   margin: 0 auto;
   position: relative;
 `;
 
 const DetailsContainer = styled.section`
-  position: relative;
-  width: 100%;
-  max-width: ${({ $show }) => ($show ? "2000px" : "0")};
-  max-height: ${({ $show }) => ($show ? "4000px" : "0")};
+  position: sticky;
+  top: 8vh;
+  width: 50%;
+  height: 100%;
+  max-width: ${({ $show }) => ($show ? "3000px" : "0")};
+  max-height: ${({ $show }) => ($show ? "6000px" : "0")};
   overflow: hidden;
-  transition: max-width 0.8s ease, max-height 0.4s ease;
+  transition: max-width 0.6s ease-in-out, max-height 0.4s ease-out;
 `;
 
-const Title = styled.h2`
-  margin: 0 0 5vh 10vw;
-`;
-
-const Description = styled.p`
+const Details = styled.article`
   max-width: 400px;
   margin: 0 0 0 auto;
+`;
+
+const Description = styled.aside`
+  margin-top: 5vh;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  position: relative;
+  &:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    bottom: 0;
+    right: 0;
+    background-color: black;
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.2s ease-out;
+  }
+  &:hover:after {
+    transform: scaleX(1);
+    transform-origin: bottom right;
+  }
 `;

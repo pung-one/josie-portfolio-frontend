@@ -1,18 +1,31 @@
 import { gql } from "@apollo/client";
 import client from "@/apollo-client";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { useState, useEffect } from "react";
 import ReactImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import { TfiAngleLeft, TfiAngleRight } from "react-icons/tfi";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
 export default function DetailPage({ artworkData, deviceType }) {
   const [images, setImages] = useState([]);
-  const { Titel, Jahr, Titelbild, Bilder, Beschreibung } =
+
+  const { Titel, Jahr, Titelbild, Bilder, Beschreibung, Begleittext } =
     artworkData.attributes;
+
   useEffect(() => {
-    setImages(
-      Bilder.data.map((image) => {
+    const titelbildData = Titelbild.data.attributes.formats;
+    setImages([
+      {
+        thumbnail: titelbildData.thumbnail,
+        original:
+          deviceType === "large" && titelbildData.large
+            ? titelbildData.large.url
+            : deviceType === "mobile" && titelbildData.small
+            ? titelbildData.small.url
+            : titelbildData.medium.url,
+      },
+      ...Bilder.data.map((image) => {
         if (!image) {
           return null;
         }
@@ -27,8 +40,8 @@ export default function DetailPage({ artworkData, deviceType }) {
               ? imgData.small.url
               : imgData.medium.url,
         };
-      })
-    );
+      }),
+    ]);
   }, [deviceType]);
 
   if (!images[0]) return <h1>Loading..</h1>;
@@ -42,7 +55,6 @@ export default function DetailPage({ artworkData, deviceType }) {
           showThumbnails={false}
           showFullscreenButton={true}
           showPlayButton={false}
-          showBullets={true}
           slideDuration={300}
           flickThreshold={0.6}
           swipeThreshold={40}
@@ -78,7 +90,12 @@ export default function DetailPage({ artworkData, deviceType }) {
         <Title>
           {Titel} - {Jahr}
         </Title>
-        <Description>{Beschreibung}</Description>
+        <Description>
+          <ReactMarkdown>{Beschreibung}</ReactMarkdown>
+          <br />
+          <br />
+          <ReactMarkdown>{Begleittext}</ReactMarkdown>
+        </Description>
       </DetailsContainer>
     </PageContainer>
   );
@@ -86,7 +103,7 @@ export default function DetailPage({ artworkData, deviceType }) {
 
 const PageContainer = styled.main`
   position: relative;
-  padding-top: 8vh;
+  padding-top: 6vh;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -102,7 +119,7 @@ const DetailsContainer = styled.aside`
   position: relative;
   width: 100%;
   max-width: 540px;
-  padding: 50px 20px;
+  padding: 6vh 20px;
   margin: 0 auto;
 `;
 
@@ -110,8 +127,8 @@ const Title = styled.h1`
   margin: 0 0 5vh;
 `;
 
-const Description = styled.p`
-  max-width: 400px;
+const Description = styled.section`
+  max-width: 450px;
   margin: 0 auto;
 `;
 
@@ -138,8 +155,9 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const { data } = await client.query({
-    query: gql`
+  try {
+    const { data, error } = await client.query({
+      query: gql`
       query {
         artworks (
             sort: "publishedAt:desc"
@@ -150,6 +168,7 @@ export async function getStaticProps({ params }) {
             attributes {
               Titel
               Beschreibung
+              Begleittext
               Jahr
               slug
               Bilder {
@@ -171,11 +190,18 @@ export async function getStaticProps({ params }) {
         }
       }
     `,
-  });
+    });
 
-  return {
-    props: {
-      artworkData: data.artworks.data[0],
-    },
-  };
+    if (error || !data) {
+      return { notFound: true };
+    }
+
+    return {
+      props: {
+        artworkData: data.artworks.data[0],
+      },
+    };
+  } catch (error) {
+    return { notFound: true };
+  }
 }

@@ -1,11 +1,11 @@
 import { gql } from "@apollo/client";
 import client from "@/apollo-client";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { useEffect, useState } from "react";
 import Artwork from "@/components/Artwork";
 import Image from "next/image";
 import Link from "next/link";
-import uuid from "react-uuid";
+import SortContent from "@/utils/SortContent";
 
 export default function Home({ posts, deviceType }) {
   const [showDetails, setShowDetails] = useState("none");
@@ -21,10 +21,11 @@ export default function Home({ posts, deviceType }) {
 
   useEffect(() => {
     setArtworks(
-      posts.map(({ attributes }) => {
+      posts.sort(SortContent).map(({ attributes }) => {
         const artwork = {
           title: attributes.Titel,
           description: attributes.Beschreibung,
+          text: attributes.Begleittext,
           year: attributes.Jahr,
           slug: attributes.slug,
         };
@@ -85,18 +86,13 @@ export default function Home({ posts, deviceType }) {
   );
 }
 
-const LoadingMessage = styled.h1`
-  width: 100%;
-  text-align: center;
-`;
-
 const PageContainer = styled.main`
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   max-width: 1200px;
-  padding-top: 8vh;
+  padding-top: 6vh;
   margin: auto;
 `;
 
@@ -105,7 +101,7 @@ const ArtworkSection = styled.section`
   display: flex;
   justify-content: center;
   width: 100%;
-  padding: 10vh;
+  padding: 10vh 20px;
   &:after {
     content: "";
     position: absolute;
@@ -123,45 +119,52 @@ const StyledImage = styled(Image)`
   box-shadow: 0 0 40px grey;
   &:hover {
     cursor: pointer;
-    box-shadow: 0 0 60px grey;
   }
 `;
 
 export async function getStaticProps() {
-  const { data } = await client.query({
-    query: gql`
-      query {
-        artworks {
-          data {
-            attributes {
-              Titel
-              Beschreibung
-              Jahr
-              slug
-              Bilder {
-                data {
-                  attributes {
-                    formats
+  try {
+    const { data, error } = await client.query({
+      query: gql`
+        query {
+          artworks {
+            data {
+              attributes {
+                Titel
+                Beschreibung
+                Begleittext
+                Jahr
+                slug
+                reihenfolge
+                Bilder {
+                  data {
+                    attributes {
+                      formats
+                    }
                   }
                 }
-              }
-              Titelbild {
-                data {
-                  attributes {
-                    formats
+                Titelbild {
+                  data {
+                    attributes {
+                      formats
+                    }
                   }
                 }
               }
             }
           }
         }
-      }
-    `,
-  });
-
-  return {
-    props: {
-      posts: data.artworks.data,
-    },
-  };
+      `,
+    });
+    if (error || !data) {
+      return { notFound: true };
+    }
+    return {
+      props: {
+        posts: data.artworks.data,
+      },
+    };
+  } catch (error) {
+    return { notFound: true };
+  }
 }

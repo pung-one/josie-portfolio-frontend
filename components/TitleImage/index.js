@@ -1,4 +1,5 @@
-import { styled, css } from "styled-components";
+import styled from "styled-components";
+import { css } from "styled-components";
 import Image from "next/image";
 
 export default function TitleImage({ onShowDetails, image, slug, isOpen }) {
@@ -15,19 +16,24 @@ export default function TitleImage({ onShowDetails, image, slug, isOpen }) {
 }
 
 const StyledImage = styled(Image)`
-  object-fit: contain;
-  width: fit-content;
+  object-fit: cover;
+  width: 100%;
+  max-width: 450px;
   height: fit-content;
-  max-height: 70vh;
-  box-shadow: 0 0 20px grey;
-  transition: box-shadow 0.2s;
+  transition: max-width 0.4s, transform 0.2s, box-shadow 0.1s;
+
   ${(props) =>
     !props.$isOpen
       ? css`
           &:hover {
             cursor: pointer;
-            box-shadow: 0 0 40px grey;
+            box-shadow: 0 0 7px grey;
+            transform: scale(1.009);
           }
         `
-      : null}
+      : props.$isOpen
+      ? css`
+          max-width: 580px;
+        `
+      : ""}
 `;

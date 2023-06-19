@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import styled from "styled-components";
 import Image from "next/image";
 
 export default function ImageContainer({ image, slug }) {
@@ -14,8 +14,7 @@ export default function ImageContainer({ image, slug }) {
 
 const StyledImage = styled(Image)`
   object-fit: contain;
-  width: fit-content;
+  width: 100%;
   height: fit-content;
-  max-height: 70vh;
-  box-shadow: 0 0 40px grey;
+  /* box-shadow: 0 0 30px grey; */
 `;
