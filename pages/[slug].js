@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 import client from "@/apollo-client";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { useState, useEffect } from "react";
 import ReactImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
@@ -55,7 +55,6 @@ export default function DetailPage({ artworkData, deviceType }) {
           showThumbnails={false}
           showFullscreenButton={true}
           showPlayButton={false}
-          showBullets={true}
           slideDuration={300}
           flickThreshold={0.6}
           swipeThreshold={40}

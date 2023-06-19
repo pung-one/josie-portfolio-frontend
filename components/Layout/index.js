@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import styled from "styled-components";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -9,16 +9,14 @@ export default function Layout({ children }) {
   return (
     <>
       <Header>
-        <Link href={"/"} passHref legacyBehavior>
-          <StyledHomeLink>Josie Overton</StyledHomeLink>
-        </Link>
+        <StyledLink href={"/"}>Josie Overton</StyledLink>
         <Nav>
-          <Link href={"/"} passHref legacyBehavior>
-            <StyledLink $isActive={route === "/"}>Art</StyledLink>
-          </Link>
-          <Link href={"/info"} passHref legacyBehavior>
-            <StyledLink $isActive={route === "/info"}>Info</StyledLink>
-          </Link>
+          <StyledLink href={"/"} $isActive={route === "/"}>
+            Art
+          </StyledLink>
+          <StyledLink href={"/info"} $isActive={route === "/info"}>
+            Info
+          </StyledLink>
         </Nav>
       </Header>
       {children}
@@ -39,11 +37,6 @@ const Header = styled.header`
 
 const Nav = styled.nav`
   display: flex;
-`;
-
-const StyledHomeLink = styled.a`
-  text-decoration: none;
-  margin: 0 20px;
 `;
 
 const StyledLink = styled.a`

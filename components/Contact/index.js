@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
 export default function Contact({ contactData }) {

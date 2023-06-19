@@ -1,4 +1,5 @@
-import { styled, css } from "styled-components";
+import styled from "styled-components";
+import { css } from "styled-components";
 import Image from "next/image";
 
 export default function TitleImage({ onShowDetails, image, slug, isOpen }) {

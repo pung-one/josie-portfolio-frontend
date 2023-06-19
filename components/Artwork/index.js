@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import styled from "styled-components";
 import TitleImage from "../TitleImage";
 import ImageContainer from "../ImageContainer";
 import CloseDetailsButton from "@/components/CloseDetailsButton";

@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import styled from "styled-components";
 
 export default function CloseDetailsButton({ showDetails, onCloseDetails }) {
   return <CloseButton onClick={() => onCloseDetails()}>X</CloseButton>;

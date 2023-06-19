@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 import client from "@/apollo-client";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { useState, useEffect } from "react";
 import AboutMe from "@/components/AboutMe";
 import Exhibitions from "@/components/Exhibitions";

@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 import client from "@/apollo-client";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { useEffect, useState } from "react";
 import Artwork from "@/components/Artwork";
 import Image from "next/image";

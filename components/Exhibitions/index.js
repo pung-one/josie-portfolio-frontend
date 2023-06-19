@@ -1,4 +1,4 @@
-import { styled } from "styled-components";
+import styled from "styled-components";
 import uuid from "react-uuid";
 
 export default function Exhibitions({ workData }) {
