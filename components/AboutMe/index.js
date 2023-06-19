@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import SortContent from "@/utils/SortContent";
 
 export default function AboutMe({ aboutMe, educationData }) {
   return (
@@ -12,7 +13,7 @@ export default function AboutMe({ aboutMe, educationData }) {
       </Description>
       <h2>Ausbildung</h2>
       <Education>
-        {educationData.map((edu) => (
+        {educationData.sort(SortContent).map((edu) => (
           <EduSection key={edu.attributes.Ausbildung}>
             <EduTime>
               {edu.attributes.von ? (
@@ -37,7 +38,6 @@ const AboutMeContainer = styled.article`
   display: flex;
   flex-direction: column;
   gap: 80px;
-  padding-right: 20px;
 `;
 
 const PersonalData = styled.section``;

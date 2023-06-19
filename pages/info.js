@@ -67,7 +67,7 @@ const PageContainer = styled.main`
 
 const InfoContainer = styled.section`
   width: ${({ $isOnDesktop }) => ($isOnDesktop ? "62%" : "100%")};
-  padding: 0 20px;
+  padding: ${({ $isOnDesktop }) => ($isOnDesktop ? "0 20px" : "0 5vw")};
 `;
 
 export async function getStaticProps() {
@@ -95,6 +95,7 @@ export async function getStaticProps() {
               von
               bis
               Ausbildung
+              reihenfolge
             }
           }
         }

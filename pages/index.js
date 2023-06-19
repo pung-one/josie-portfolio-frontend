@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Artwork from "@/components/Artwork";
 import Image from "next/image";
 import Link from "next/link";
+import SortContent from "@/utils/SortContent";
 
 export default function Home({ posts, deviceType }) {
   const [showDetails, setShowDetails] = useState("none");
@@ -20,7 +21,7 @@ export default function Home({ posts, deviceType }) {
 
   useEffect(() => {
     setArtworks(
-      posts.map(({ attributes }) => {
+      posts.sort(SortContent).map(({ attributes }) => {
         const artwork = {
           title: attributes.Titel,
           description: attributes.Beschreibung,

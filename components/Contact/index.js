@@ -13,5 +13,4 @@ const ContactContainer = styled.article`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding-right: 10px;
 `;

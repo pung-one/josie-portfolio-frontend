@@ -1,13 +1,15 @@
 import styled from "styled-components";
 import uuid from "react-uuid";
+import SortContent from "@/utils/SortContent";
 
 export default function Exhibitions({ workData }) {
+  console.log(workData);
   return (
     <ExhibitionsContainer>
       {workData?.upcomingExhibitions[0] && (
         <ExhiContainer>
           <ExhiHeadline>kommende Ausstellungen</ExhiHeadline>
-          {workData.upcomingExhibitions.map((exhi) => {
+          {workData.upcomingExhibitions.sort(SortContent).map((exhi) => {
             return (
               <ExhiSection key={uuid()}>
                 <ExhiYear>{exhi.attributes.Jahr}</ExhiYear>
@@ -19,7 +21,7 @@ export default function Exhibitions({ workData }) {
       )}
       <ExhiContainer>
         <ExhiHeadline>Ausstellungen</ExhiHeadline>
-        {workData.exhibitions.map((exhi) => {
+        {workData.exhibitions.sort(SortContent).map((exhi) => {
           return (
             <ExhiSection key={uuid()}>
               <ExhiYear>{exhi.attributes.Jahr}</ExhiYear>
@@ -35,18 +37,17 @@ export default function Exhibitions({ workData }) {
 const ExhibitionsContainer = styled.article`
   display: flex;
   flex-direction: column;
-  gap: 100px;
-  padding-right: 10px;
+  gap: 10vh;
 `;
 
 const ExhiContainer = styled.section`
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 5vh;
 `;
 
 const ExhiHeadline = styled.h2`
-  margin-bottom: 50px;
+  /* margin-bottom: 1vh; */
 `;
 
 const ExhiSection = styled.div`
