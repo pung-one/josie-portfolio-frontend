@@ -120,7 +120,7 @@ const DetailsContainer = styled.aside`
   position: relative;
   width: 100%;
   max-width: 540px;
-  padding: 50px 20px;
+  padding: 6vh 20px;
   margin: 0 auto;
 `;
 
@@ -128,8 +128,8 @@ const Title = styled.h1`
   margin: 0 0 5vh;
 `;
 
-const Description = styled.p`
-  max-width: 400px;
+const Description = styled.section`
+  max-width: 450px;
   margin: 0 auto;
 `;
 

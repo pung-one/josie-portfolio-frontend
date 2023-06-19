@@ -15,12 +15,11 @@ export default function TitleImage({ onShowDetails, image, slug, isOpen }) {
 }
 
 const StyledImage = styled(Image)`
-  object-fit: contain;
-  width: 580px;
+  object-fit: cover;
+  width: 100%;
+  max-width: 450px;
   height: fit-content;
-  /* box-shadow: 0 0 30px grey; */
-  /* transition: box-shadow 0.1s; */
-  transition: transform 0.3s, box-shadow 0.1s;
+  transition: max-width 0.4s, transform 0.2s, box-shadow 0.1s;
 
   ${(props) =>
     !props.$isOpen
@@ -31,5 +30,9 @@ const StyledImage = styled(Image)`
             transform: scale(1.009);
           }
         `
-      : null}
+      : props.$isOpen
+      ? css`
+          max-width: 580px;
+        `
+      : ""}
 `;

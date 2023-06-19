@@ -4,6 +4,7 @@ import ImageContainer from "../ImageContainer";
 import CloseDetailsButton from "@/components/CloseDetailsButton";
 import uuid from "react-uuid";
 import Link from "next/link";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
 export default function Artwork({
   artwork,
@@ -41,10 +42,12 @@ export default function Artwork({
               {year}
             </h2>
           </Link>
-          <Description>{description}</Description>
+          <Description>
+            <ReactMarkdown children={description} />
+          </Description>
           <br />
           <br />
-          <Link href={`/${slug}`}>Read more</Link>
+          <StyledLink href={`/${slug}`}>Read more</StyledLink>
         </Details>
       </DetailsContainer>
     </>
@@ -63,12 +66,14 @@ const ImagesContainer = styled.aside`
 `;
 
 const DetailsContainer = styled.section`
-  position: relative;
+  position: sticky;
+  top: 8vh;
   width: 50%;
-  max-width: ${({ $show }) => ($show ? "2000px" : "0")};
-  max-height: ${({ $show }) => ($show ? "4000px" : "0")};
+  height: 100%;
+  max-width: ${({ $show }) => ($show ? "3000px" : "0")};
+  max-height: ${({ $show }) => ($show ? "6000px" : "0")};
   overflow: hidden;
-  transition: max-width 0.8s ease-in, max-height 0.4s ease-out;
+  transition: max-width 0.6s ease-in-out, max-height 0.4s ease-out;
 `;
 
 const Details = styled.article`
@@ -76,6 +81,27 @@ const Details = styled.article`
   margin: 0 0 0 auto;
 `;
 
-const Description = styled.p`
+const Description = styled.aside`
   margin-top: 5vh;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  position: relative;
+  &:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    bottom: 0;
+    right: 0;
+    background-color: black;
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    transition: transform 0.2s ease-out;
+  }
+  &:hover:after {
+    transform: scaleX(1);
+    transform-origin: bottom right;
+  }
 `;

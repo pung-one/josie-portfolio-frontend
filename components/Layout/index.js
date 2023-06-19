@@ -1,16 +1,25 @@
 import { styled } from "styled-components";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Layout({ children }) {
+  const router = useRouter();
+  const route = router.route;
+
   return (
     <>
       <Header>
         <Link href={"/"} passHref legacyBehavior>
           <StyledHomeLink>Josie Overton</StyledHomeLink>
         </Link>
-        <Link href={"/info"} passHref legacyBehavior>
-          <StyledLink>Info</StyledLink>
-        </Link>
+        <Nav>
+          <Link href={"/"} passHref legacyBehavior>
+            <StyledLink $isActive={route === "/"}>Art</StyledLink>
+          </Link>
+          <Link href={"/info"} passHref legacyBehavior>
+            <StyledLink $isActive={route === "/info"}>Info</StyledLink>
+          </Link>
+        </Nav>
       </Header>
       {children}
     </>
@@ -26,6 +35,10 @@ const Header = styled.header`
   height: 6vh;
   width: 100%;
   border-bottom: 1px solid black;
+`;
+
+const Nav = styled.nav`
+  display: flex;
 `;
 
 const StyledHomeLink = styled.a`
@@ -45,7 +58,7 @@ const StyledLink = styled.a`
     bottom: 0;
     right: 0;
     background-color: black;
-    transform: scaleX(0);
+    transform: ${({ $isActive }) => ($isActive ? "scaleX(1)" : "scaleX(0)")};
     transform-origin: bottom right;
     transition: transform 0.2s ease-out;
   }
