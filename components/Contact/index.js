@@ -4,7 +4,7 @@ import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 export default function Contact({ contactData }) {
   return (
     <ContactContainer>
-      <ReactMarkdown children={contactData.contactData} />
+      <ReactMarkdown>{contactData.contactData}</ReactMarkdown>
     </ContactContainer>
   );
 }

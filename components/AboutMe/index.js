@@ -6,10 +6,10 @@ export default function AboutMe({ aboutMe, educationData }) {
   return (
     <AboutMeContainer>
       <PersonalData>
-        <ReactMarkdown children={aboutMe.personalData} />
+        <ReactMarkdown>{aboutMe.personalData}</ReactMarkdown>
       </PersonalData>
       <Description>
-        <ReactMarkdown children={aboutMe.Selbstbeschreibung} />
+        <ReactMarkdown>{aboutMe.Selbstbeschreibung}</ReactMarkdown>
       </Description>
       <h2>Ausbildung</h2>
       <Education>

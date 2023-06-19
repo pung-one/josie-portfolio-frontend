@@ -43,7 +43,7 @@ export default function Artwork({
             </h2>
           </Link>
           <Description>
-            <ReactMarkdown children={description} />
+            <ReactMarkdown>{description}</ReactMarkdown>
           </Description>
           <br />
           <br />
