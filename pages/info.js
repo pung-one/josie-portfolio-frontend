@@ -5,7 +5,8 @@ import { useState, useEffect } from "react";
 import AboutMe from "@/components/AboutMe";
 import Exhibitions from "@/components/Exhibitions";
 import Contact from "@/components/Contact";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import InfoNavDesktop from "@/components/InfoNavDesktop";
+import InfoNavMobile from "@/components/InfoNavMobile";
 
 export default function InfoPage({ aboutData, deviceType }) {
   const [aboutMe, setAboutMe] = useState({});
@@ -14,6 +15,9 @@ export default function InfoPage({ aboutData, deviceType }) {
   const [workData, setWorkData] = useState({});
 
   const [showInfo, setShowInfo] = useState("about-me");
+  function handleShowInfo(info) {
+    setShowInfo(info);
+  }
 
   useEffect(() => {
     setAboutMe({ ...aboutData.aboutMe.data.attributes });
@@ -30,30 +34,13 @@ export default function InfoPage({ aboutData, deviceType }) {
     return <h1>Loading..</h1>;
 
   return (
-    <PageContainer>
-      <NavContainer>
-        <NavList>
-          <NavItem
-            $isActive={showInfo === "about-me"}
-            onClick={() => setShowInfo("about-me")}
-          >
-            About Me
-          </NavItem>
-          <NavItem
-            $isActive={showInfo === "exhibitions"}
-            onClick={() => setShowInfo("exhibitions")}
-          >
-            Exhibitions
-          </NavItem>
-          <NavItem
-            $isActive={showInfo === "contact"}
-            onClick={() => setShowInfo("contact")}
-          >
-            Contact
-          </NavItem>
-        </NavList>
-      </NavContainer>
-      <InfoContainer>
+    <PageContainer $isOnDesktop={deviceType === "desktop"}>
+      {deviceType === "desktop" ? (
+        <InfoNavDesktop onShowInfo={handleShowInfo} showInfo={showInfo} />
+      ) : (
+        <InfoNavMobile onShowInfo={handleShowInfo} showInfo={showInfo} />
+      )}
+      <InfoContainer $isOnDesktop={deviceType === "desktop"}>
         {showInfo === "about-me" ? (
           <AboutMe aboutMe={aboutMe} educationData={educationData} />
         ) : showInfo === "exhibitions" ? (
@@ -71,49 +58,16 @@ export default function InfoPage({ aboutData, deviceType }) {
 const PageContainer = styled.main`
   position: relative;
   display: flex;
-  padding: 16vh 0 10vh;
-  margin-left: 10vw;
+  flex-direction: ${({ $isOnDesktop }) => ($isOnDesktop ? "row" : "column")};
+  padding: ${({ $isOnDesktop }) =>
+    $isOnDesktop ? "16vh 0 10vh" : "6vh 0 10vh"};
+  margin: ${({ $isOnDesktop }) => ($isOnDesktop ? "0 0 0 10vw" : "")};
   max-width: 1200px;
 `;
 
-const NavContainer = styled.nav`
-  width: 38%;
-`;
-
-const NavList = styled.ul`
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 50px;
-`;
-
-const NavItem = styled.li`
-  position: relative;
-  width: fit-content;
-  &:hover {
-    cursor: pointer;
-  }
-  &:after {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 1px;
-    bottom: 0;
-    right: 0;
-    background-color: black;
-    transform: ${({ $isActive }) => ($isActive ? "scaleX(1)" : "scaleX(0)")};
-    transform-origin: bottom right;
-    transition: transform 0.2s ease-out;
-  }
-  &:hover:after {
-    transform: scaleX(1);
-    transform-origin: bottom right;
-  }
-`;
-
 const InfoContainer = styled.section`
-  width: 62%;
-  padding: 0 10px;
+  width: ${({ $isOnDesktop }) => ($isOnDesktop ? "62%" : "100%")};
+  padding: 0 20px;
 `;
 
 export async function getStaticProps() {

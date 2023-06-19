@@ -9,7 +9,7 @@ export default function Layout({ children }) {
   return (
     <>
       <Header>
-        <StyledLink href={"/"}>Josie Overton</StyledLink>
+        <StyledHomeLink href={"/"}>Josie Overton</StyledHomeLink>
         <Nav>
           <StyledLink href={"/"} $isActive={route === "/"}>
             Art
@@ -39,7 +39,13 @@ const Nav = styled.nav`
   display: flex;
 `;
 
-const StyledLink = styled.a`
+const StyledHomeLink = styled(Link)`
+  position: relative;
+  text-decoration: none;
+  margin: 0 20px;
+`;
+
+const StyledLink = styled(Link)`
   position: relative;
   text-decoration: none;
   margin: 0 20px;
