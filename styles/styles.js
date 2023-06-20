@@ -47,14 +47,14 @@ const GlobalStyle = createGlobalStyle`
 
   .image-gallery{
     position: relative;
-    max-width: 540px;
-    margin: 6vh auto;
+    max-width: 800px;
+    margin: 8vh auto 0;
     
   }
   .image-gallery img{
     margin: auto;
     width: fit-content;
-    height: 80vh;
+    height: 60vh;
   }
 
 `;

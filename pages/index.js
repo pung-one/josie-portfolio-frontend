@@ -2,123 +2,143 @@ import { gql } from "@apollo/client";
 import client from "@/apollo-client";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-import Artwork from "@/components/Artwork";
 import Image from "next/image";
 import Link from "next/link";
 import SortContent from "@/utils/SortContent";
+import React from "react";
+import { TfiAngleDown } from "react-icons/tfi";
 
 export default function Home({ posts, deviceType }) {
-  const [showDetails, setShowDetails] = useState("none");
   const [artworks, setArtworks] = useState([]);
+  const [showArrow, setShowArrow] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
-  function handleShowDetails(slug) {
-    setShowDetails(slug);
+  function handleScroll() {
+    if (typeof window !== "undefined") {
+      if (window.scrollY > 100) {
+        setShowArrow(false);
+      } else {
+        setShowArrow(true);
+      }
+      setLastScrollY(window.scrollY);
+    }
   }
 
-  function handleCloseDetails() {
-    setShowDetails("none");
-  }
+  useEffect(() => {
+    if (typeof window !== "undefined" && deviceType !== "mobile") {
+      window.addEventListener("scroll", handleScroll);
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+      };
+    }
+  }, [lastScrollY]);
 
   useEffect(() => {
     setArtworks(
       posts.sort(SortContent).map(({ attributes }) => {
-        const artwork = {
-          title: attributes.Titel,
-          description: attributes.Beschreibung,
-          text: attributes.Begleittext,
-          year: attributes.Jahr,
-          slug: attributes.slug,
-        };
         const titleImage = attributes.Titelbild.data.attributes.formats;
-        const images = attributes.Bilder.data.map(
-          (image) => image.attributes.formats
-        );
 
         return {
-          ...artwork,
+          slug: attributes.slug,
           titleImage:
             deviceType === "desktop" && titleImage.large
               ? titleImage.large
               : deviceType === "mobile" && titleImage.small
               ? titleImage.small
               : titleImage.medium,
-          images: images.map((image) =>
-            deviceType === "desktop" && image.large
-              ? { ...image.large }
-              : deviceType === "mobile" && image.small
-              ? { ...image.small }
-              : { ...image.medium }
-          ),
         };
       })
     );
   }, [deviceType]);
 
+  if (!artworks.length === 0) return <LoadingMessage>Loading..</LoadingMessage>;
+
   return (
     <PageContainer>
       {artworks?.map((artwork) => {
-        if (!artwork) {
-          return null;
-        }
+        const { url, width, height } = artwork.titleImage;
         return (
-          <ArtworkSection key={artwork.slug}>
-            {deviceType === "desktop" ? (
-              <Artwork
-                showDetails={showDetails}
-                handleShowDetails={handleShowDetails}
-                handleCloseDetails={handleCloseDetails}
-                artwork={artwork}
-              />
-            ) : (
+          <React.Fragment key={artwork.titleImage.hash}>
+            <ArtworkSection>
               <Link href={`${artwork.slug}`}>
                 <StyledImage
                   alt={artwork.slug}
-                  src={artwork.titleImage.url}
-                  width={artwork.titleImage.width}
-                  height={artwork.titleImage.height}
+                  src={url}
+                  width={width}
+                  height={height}
+                  $isOnMobile={deviceType === "mobile"}
                 />
               </Link>
-            )}
-          </ArtworkSection>
+            </ArtworkSection>
+            <Seperator />
+          </React.Fragment>
         );
       })}
+      {deviceType !== "mobile" && (
+        <ArrowDown $showArrow={showArrow}>
+          <Arrow />
+        </ArrowDown>
+      )}
     </PageContainer>
   );
 }
 
+const LoadingMessage = styled.h1`
+  width: 100%;
+  text-align: center;
+  padding-top: 8vh;
+`;
+
 const PageContainer = styled.main`
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 1200px;
+  justify-content: center;
   padding-top: 6vh;
   margin: auto;
 `;
 
+const ArrowDown = styled.div`
+  z-index: 0;
+  position: -webkit-sticky;
+  position: sticky;
+  bottom: 0;
+  width: 100vw;
+  font-size: 1.5rem;
+  transition: opacity 0.3s;
+  opacity: ${({ $showArrow }) => ($showArrow ? "1" : "0")};
+`;
+
+const Arrow = styled(TfiAngleDown)`
+  margin-left: 5vw;
+  margin-bottom: 20px;
+`;
+
 const ArtworkSection = styled.section`
+  z-index: 1;
   position: relative;
   display: flex;
   justify-content: center;
-  width: 100%;
-  padding: 10vh 20px;
-  &:after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    height: 1px;
-    width: 80%;
-    background-color: black;
-  }
+  max-width: 1200px;
+  padding: 10vh 4vw;
+`;
+
+const Seperator = styled.div`
+  height: 1px;
+  width: 100vw;
+  background-color: black;
 `;
 
 const StyledImage = styled(Image)`
-  object-fit: cover;
-  height: fit-content;
-  width: 90vw;
-  box-shadow: 0 0 40px grey;
+  object-fit: contain;
+  height: ${({ $isOnMobile }) => ($isOnMobile ? "fit-content" : "74vh")};
+  width: ${({ $isOnMobile }) => ($isOnMobile ? "92vw" : "100%")};
+  max-width: 94vw;
+  transition: transform 0.2s, box-shadow 0.2s;
   &:hover {
     cursor: pointer;
+    box-shadow: 0 0 7px grey;
+    transform: scale(1.006);
   }
 `;
 
@@ -130,19 +150,8 @@ export async function getStaticProps() {
           artworks {
             data {
               attributes {
-                Titel
-                Beschreibung
-                Begleittext
-                Jahr
                 slug
                 reihenfolge
-                Bilder {
-                  data {
-                    attributes {
-                      formats
-                    }
-                  }
-                }
                 Titelbild {
                   data {
                     attributes {
