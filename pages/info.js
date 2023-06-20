@@ -79,6 +79,13 @@ export async function getStaticProps() {
             attributes {
               personalData
               Selbstbeschreibung
+              portfolioPDF {
+                data {
+                  attributes {
+                    url
+                  }
+                }
+              }
             }
           }
         }

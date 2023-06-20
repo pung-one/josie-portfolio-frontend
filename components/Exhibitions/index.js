@@ -3,11 +3,12 @@ import uuid from "react-uuid";
 import SortContent from "@/utils/SortContent";
 
 export default function Exhibitions({ workData }) {
+  console.log(workData);
   return (
     <ExhibitionsContainer>
       {workData?.upcomingExhibitions[0] && (
-        <ExhiContainer>
-          <ExhiHeadline>kommende Ausstellungen</ExhiHeadline>
+        <ExhiContainer id="upcoming">
+          <ExhiHeadline>Upcoming Exhibtions</ExhiHeadline>
           {workData.upcomingExhibitions.sort(SortContent).map((exhi) => {
             return (
               <ExhiSection key={uuid()}>
@@ -18,13 +19,24 @@ export default function Exhibitions({ workData }) {
           })}
         </ExhiContainer>
       )}
-      <ExhiContainer>
-        <ExhiHeadline>Ausstellungen</ExhiHeadline>
+      <ExhiContainer id="exhibitions">
+        <ExhiHeadline>Exhibitions</ExhiHeadline>
         {workData.exhibitions.sort(SortContent).map((exhi) => {
           return (
             <ExhiSection key={uuid()}>
               <ExhiYear>{exhi.attributes.Jahr}</ExhiYear>
               <ExhiPlace>{exhi.attributes.Ausstellung}</ExhiPlace>
+            </ExhiSection>
+          );
+        })}
+      </ExhiContainer>
+      <ExhiContainer id="sound">
+        <ExhiHeadline>Sound Design</ExhiHeadline>
+        {workData.soundDesigns.sort(SortContent).map((exhi) => {
+          return (
+            <ExhiSection key={uuid()}>
+              <ExhiYear>{exhi.attributes.Jahr}</ExhiYear>
+              <ExhiPlace>{exhi.attributes.Location}</ExhiPlace>
             </ExhiSection>
           );
         })}
@@ -43,11 +55,13 @@ const ExhiContainer = styled.section`
   display: flex;
   flex-direction: column;
   gap: 5vh;
+  &:target::before {
+    content: "";
+    margin-top: 2vh;
+  }
 `;
 
-const ExhiHeadline = styled.h2`
-  /* margin-bottom: 1vh; */
-`;
+const ExhiHeadline = styled.h2``;
 
 const ExhiSection = styled.div`
   display: flex;
