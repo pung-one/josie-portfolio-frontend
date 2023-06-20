@@ -264,6 +264,10 @@ const LanguageButton = styled.button`
   border: none;
   background: none;
   font-size: 1rem;
+  color: black;
+  * {
+    color: black;
+  }
   &:hover {
     cursor: pointer;
   }
