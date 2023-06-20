@@ -29,9 +29,12 @@ export default function InfoNavMobile({ onShowInfo, showInfo }) {
 
 const NavContainer = styled.nav`
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 6vh;
   width: 100%;
-  padding: 2vh 0;
   margin-bottom: 5vh;
+  border-bottom: 1px solid black;
 `;
 
 const NavList = styled.ul`

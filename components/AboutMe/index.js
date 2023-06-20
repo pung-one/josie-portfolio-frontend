@@ -1,16 +1,22 @@
 import styled from "styled-components";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import SortContent from "@/utils/SortContent";
+import Link from "next/link";
 
 export default function AboutMe({ aboutMe, educationData }) {
+  if (!aboutMe.portfolioPDF?.data.attributes.url) return <h1>Loading..</h1>;
+
   return (
     <AboutMeContainer>
-      <PersonalData>
+      <StyledLink href={aboutMe.portfolioPDF?.data.attributes.url}>
+        Download Portfolio
+      </StyledLink>
+      <section>
         <ReactMarkdown>{aboutMe.personalData}</ReactMarkdown>
-      </PersonalData>
-      <Description>
+      </section>
+      <section>
         <ReactMarkdown>{aboutMe.Selbstbeschreibung}</ReactMarkdown>
-      </Description>
+      </section>
       <h2>Ausbildung</h2>
       <Education>
         {educationData.sort(SortContent).map((edu) => (
@@ -37,12 +43,10 @@ export default function AboutMe({ aboutMe, educationData }) {
 const AboutMeContainer = styled.article`
   display: flex;
   flex-direction: column;
-  gap: 80px;
+  gap: 7vh;
 `;
 
-const PersonalData = styled.section``;
-
-const Description = styled.section``;
+const StyledLink = styled(Link)``;
 
 const Education = styled.aside`
   display: flex;
