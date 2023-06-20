@@ -12,11 +12,26 @@ import { TfiArrowLeft } from "react-icons/tfi";
 import Link from "next/link";
 
 export default function DetailPage({ artworkData, deviceType }) {
+  const [language, setLanguage] = useState("english");
   const [imagesForMobileGallery, setImagesForMobileGallery] = useState([]);
   const [imagesForDesktop, setImagesForDesktop] = useState([]);
+  console.log(language);
+  const {
+    Titel,
+    Titelbild,
+    Bilder,
+    Beschreibung,
+    BegleittextDeu,
+    BegleittextEng,
+  } = artworkData.attributes;
 
-  const { Titel, Jahr, Titelbild, Bilder, Beschreibung, Begleittext } =
-    artworkData.attributes;
+  function handleToggleLanguage() {
+    if (language === "english") {
+      setLanguage("german");
+    } else if (language === "german") {
+      setLanguage("english");
+    }
+  }
 
   useEffect(() => {
     const titelbildData = Titelbild.data.attributes.formats;
@@ -163,14 +178,24 @@ export default function DetailPage({ artworkData, deviceType }) {
         )}
       </GalleryContainer>
       <DetailsContainer $isOnDesktop={deviceType === "desktop"}>
-        <Title>
-          {Titel} - {Jahr}
-        </Title>
+        <Title>{Titel}</Title>
         <Description>
           <ReactMarkdown>{Beschreibung}</ReactMarkdown>
           <br />
+          <ButtonContainer>
+            <LanguageButton
+              aria-label="switch between english and german language"
+              onClick={() => handleToggleLanguage()}
+            >
+              <LangSign $isActive={language === "english"}>ENG</LangSign>
+              <span>/</span>
+              <LangSign $isActive={language === "german"}>DEU</LangSign>
+            </LanguageButton>
+          </ButtonContainer>
           <br />
-          <ReactMarkdown>{Begleittext}</ReactMarkdown>
+          <ReactMarkdown>
+            {language === "german" ? BegleittextDeu : BegleittextEng}
+          </ReactMarkdown>
         </Description>
       </DetailsContainer>
     </PageContainer>
@@ -228,6 +253,27 @@ const DetailsContainer = styled.aside`
   margin-top: ${({ $isOnDesktop }) => ($isOnDesktop ? "10vh" : "6vh")};
 `;
 
+const ButtonContainer = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+`;
+
+const LanguageButton = styled.button`
+  border: none;
+  background: none;
+  font-size: 1rem;
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const LangSign = styled.span`
+  display: inline-block;
+  text-decoration: ${({ $isActive }) => ($isActive ? "underline" : "none")};
+`;
+
 const Title = styled.h1`
   margin: 0 0 5vh auto;
   max-width: 400px;
@@ -273,17 +319,6 @@ export async function getStaticProps({ params }) {
           data {
             attributes {
               Titel
-              Beschreibung
-              Begleittext
-              Jahr
-              slug
-              Bilder {
-                data {
-                  attributes {
-                    formats
-                  }
-                }
-              }
               Titelbild {
                 data {
                   attributes {
@@ -291,6 +326,16 @@ export async function getStaticProps({ params }) {
                   }
                 }
               }
+              Bilder {
+                data {
+                  attributes {
+                    formats
+                  }
+                }
+              }
+            Beschreibung
+            BegleittextDeu
+            BegleittextEng
             }
           }
         }
