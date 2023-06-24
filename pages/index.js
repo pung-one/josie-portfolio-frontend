@@ -66,7 +66,9 @@ export default function Home({ posts, deviceType }) {
                   src={url}
                   width={width}
                   height={height}
-                  $isOnMobile={deviceType === "mobile"}
+                  $isOnPortraitViewport={
+                    deviceType === "mobile" || deviceType === "tablet"
+                  }
                 />
               </Link>
             </ArtworkSection>
@@ -100,13 +102,13 @@ const PageContainer = styled.main`
 
 const ArrowDown = styled.div`
   z-index: 0;
-  position: -webkit-sticky;
   position: sticky;
   bottom: 0;
   width: 100vw;
   font-size: 1.5rem;
-  transition: opacity 0.3s;
+  transition: all 0.3s;
   opacity: ${({ $showArrow }) => ($showArrow ? "1" : "0")};
+  max-height: ${({ $showArrow }) => ($showArrow ? "100vh" : "0")};
 `;
 
 const Arrow = styled(TfiAngleDown)`
@@ -131,14 +133,15 @@ const Seperator = styled.div`
 
 const StyledImage = styled(Image)`
   object-fit: contain;
-  height: ${({ $isOnMobile }) => ($isOnMobile ? "fit-content" : "74vh")};
-  width: ${({ $isOnMobile }) => ($isOnMobile ? "92vw" : "100%")};
+  height: ${({ $isOnPortraitViewport }) =>
+    $isOnPortraitViewport ? "fit-content" : "74vh"};
+  width: ${({ $isOnPortraitViewport }) =>
+    $isOnPortraitViewport ? "92vw" : "fit-content"};
   max-width: 94vw;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.1s;
   &:hover {
     cursor: pointer;
-    box-shadow: 0 0 7px grey;
-    transform: scale(1.006);
+    transform: scale(1.02);
   }
 `;
 

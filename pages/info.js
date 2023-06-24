@@ -30,13 +30,23 @@ export default function InfoPage({ aboutData, deviceType }) {
     });
   }, [aboutData]);
 
-  if (!aboutMe || !contactData || !educationData || !workData)
+  if (
+    !aboutMe ||
+    !contactData ||
+    !educationData ||
+    !workData ||
+    !workData.upcomingExhibitions
+  )
     return <h1>Loading..</h1>;
 
   return (
     <PageContainer $isOnDesktop={deviceType === "desktop"}>
       {deviceType === "desktop" ? (
-        <InfoNavDesktop onShowInfo={handleShowInfo} showInfo={showInfo} />
+        <InfoNavDesktop
+          onShowInfo={handleShowInfo}
+          showInfo={showInfo}
+          upcomingExists={workData?.upcomingExhibitions[0] !== undefined}
+        />
       ) : (
         <InfoNavMobile onShowInfo={handleShowInfo} showInfo={showInfo} />
       )}

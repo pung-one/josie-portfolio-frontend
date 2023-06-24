@@ -57,5 +57,12 @@ const GlobalStyle = createGlobalStyle`
     height: 60vh;
   }
 
+  .image-gallery-icon {
+    filter:drop-shadow(0 1px 0px black);
+    &:hover{
+      color: white;
+    }
+  }
+
 `;
 export default GlobalStyle;

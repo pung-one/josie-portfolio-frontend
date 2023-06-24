@@ -6,9 +6,12 @@ export default function Contact({ contactData }) {
   return (
     <ContactContainer>
       <ReactMarkdown>{contactData.contactData}</ReactMarkdown>
-      <Link href={"https://www.instagram.com/d_josieoverton/"} target="_blank">
+      <StyledLink
+        href={"https://www.instagram.com/d_josieoverton/"}
+        target="_blank"
+      >
         Instagram
-      </Link>
+      </StyledLink>
     </ContactContainer>
   );
 }
@@ -18,4 +21,20 @@ const ContactContainer = styled.article`
   flex-direction: column;
   gap: 20px;
   padding-left: 3vw;
+`;
+
+const StyledLink = styled(Link)`
+  position: relative;
+  width: fit-content;
+  text-decoration: none;
+  &:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    bottom: 0;
+    right: 0;
+    background-color: black;
+    transform: scaleX(1);
+  }
 `;

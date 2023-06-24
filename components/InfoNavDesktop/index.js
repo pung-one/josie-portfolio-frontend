@@ -1,6 +1,10 @@
 import styled from "styled-components";
 
-export default function InfoNavDesktop({ onShowInfo, showInfo }) {
+export default function InfoNavDesktop({
+  onShowInfo,
+  showInfo,
+  upcomingExists,
+}) {
   return (
     <NavContainer>
       <NavList>
@@ -20,7 +24,9 @@ export default function InfoNavDesktop({ onShowInfo, showInfo }) {
             Exhibitions
           </NavItem>
           <ExhiList $show={showInfo === "exhibitions"}>
-            <ExhiLink href="#upcoming">Upcoming Exhibitions</ExhiLink>
+            {upcomingExists && (
+              <ExhiLink href="#upcoming">Upcoming Exhibitions</ExhiLink>
+            )}
             <ExhiLink href="#exhibitions">Exhibitions</ExhiLink>
             <ExhiLink href="#sound">Sound Design</ExhiLink>
           </ExhiList>
@@ -47,12 +53,15 @@ const NavList = styled.ul`
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 5vh;
+  gap: 5.5vh;
 `;
 
-const ItemContainer = styled.li``;
+const ItemContainer = styled.li`
+  width: fit-content;
+`;
 
 const NavItem = styled.span`
+  display: inline-block;
   position: relative;
   width: fit-content;
   &:hover {

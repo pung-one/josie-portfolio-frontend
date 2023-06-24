@@ -8,7 +8,10 @@ export default function AboutMe({ aboutMe, educationData }) {
 
   return (
     <AboutMeContainer>
-      <StyledLink href={aboutMe.portfolioPDF?.data.attributes.url}>
+      <StyledLink
+        href={aboutMe.portfolioPDF?.data.attributes.url}
+        target="_blank"
+      >
         Download Portfolio
       </StyledLink>
       <section>
@@ -43,10 +46,24 @@ export default function AboutMe({ aboutMe, educationData }) {
 const AboutMeContainer = styled.article`
   display: flex;
   flex-direction: column;
-  gap: 7vh;
+  gap: 5vh;
 `;
 
-const StyledLink = styled(Link)``;
+const StyledLink = styled(Link)`
+  position: relative;
+  width: fit-content;
+  text-decoration: none;
+  &:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    bottom: 0;
+    right: 0;
+    background-color: black;
+    transform: scaleX(1);
+  }
+`;
 
 const Education = styled.aside`
   display: flex;

@@ -15,7 +15,7 @@ export default function DetailPage({ artworkData, deviceType }) {
   const [language, setLanguage] = useState("english");
   const [imagesForMobileGallery, setImagesForMobileGallery] = useState([]);
   const [imagesForDesktop, setImagesForDesktop] = useState([]);
-  console.log(language);
+
   const {
     Titel,
     Titelbild,
@@ -170,7 +170,11 @@ export default function DetailPage({ artworkData, deviceType }) {
                   disabled={disabled}
                   onClick={onClick}
                 >
-                  <TfiAngleRight size={30} color="#fff" />
+                  <TfiAngleRight
+                    size={30}
+                    color="#fff"
+                    style={{ boxShadow: "none" }}
+                  />
                 </button>
               );
             }}
@@ -182,20 +186,26 @@ export default function DetailPage({ artworkData, deviceType }) {
         <Description>
           <ReactMarkdown>{Beschreibung}</ReactMarkdown>
           <br />
-          <ButtonContainer>
-            <LanguageButton
-              aria-label="switch between english and german language"
-              onClick={() => handleToggleLanguage()}
-            >
-              <LangSign $isActive={language === "english"}>ENG</LangSign>
-              <span>/</span>
-              <LangSign $isActive={language === "german"}>DEU</LangSign>
-            </LanguageButton>
-          </ButtonContainer>
-          <br />
-          <ReactMarkdown>
-            {language === "german" ? BegleittextDeu : BegleittextEng}
-          </ReactMarkdown>
+          {BegleittextDeu !== "none" ? (
+            <Text>
+              <ButtonContainer>
+                <LanguageButton
+                  aria-label="switch between english and german language"
+                  onClick={() => handleToggleLanguage()}
+                >
+                  <LangSign $isActive={language === "english"}>ENG</LangSign>
+                  <span>/</span>
+                  <LangSign $isActive={language === "german"}>DEU</LangSign>
+                </LanguageButton>
+              </ButtonContainer>
+              <br />
+              <ReactMarkdown>
+                {language === "german" ? BegleittextDeu : BegleittextEng}
+              </ReactMarkdown>
+            </Text>
+          ) : (
+            ""
+          )}
         </Description>
       </DetailsContainer>
     </PageContainer>
@@ -253,6 +263,13 @@ const DetailsContainer = styled.aside`
   margin-top: ${({ $isOnDesktop }) => ($isOnDesktop ? "10vh" : "6vh")};
 `;
 
+const Description = styled.section`
+  max-width: 400px;
+  margin: 0 0 0 auto;
+`;
+
+const Text = styled.section``;
+
 const ButtonContainer = styled.div`
   position: relative;
   display: flex;
@@ -281,11 +298,6 @@ const LangSign = styled.span`
 const Title = styled.h1`
   margin: 0 0 5vh auto;
   max-width: 400px;
-`;
-
-const Description = styled.section`
-  max-width: 400px;
-  margin: 0 0 0 auto;
 `;
 
 export async function getStaticPaths() {
