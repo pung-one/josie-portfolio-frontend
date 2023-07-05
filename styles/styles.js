@@ -3,18 +3,8 @@ import { createGlobalStyle } from "styled-components";
 const GlobalStyle = createGlobalStyle`
 
   @font-face {
-  font-family: "NewOrderNormal";
-  src: url("./fonts/New-Order-Regular.otf");
-  }
-
-  @font-face {
-  font-family: "NewOrderBold";
-  src: url("./fonts/New-Order-Bold.otf");
-  }
-
-  @font-face {
   font-family: "NewOrderLight";
-  src: url("./fonts/New-Order-Light.otf");
+  src: local("NewOrderLight"), url("./fonts/New-Order-Light.otf");
   }
 
   
@@ -29,13 +19,13 @@ const GlobalStyle = createGlobalStyle`
     text-decoration: none;
     margin: 0;
     padding: 0;
-    font-family: NewOrderLight;
+    font-weight: lighter;
+    font-family: NewOrderLight, Helvetica, sans-serif;
   }
   h1 {
     font-size: 2rem;
   }
   h2 {
-    font-family: var(--headline-font);
   }
   p {
     line-height: 1.8;
