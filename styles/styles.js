@@ -29,7 +29,7 @@ const GlobalStyle = createGlobalStyle`
     text-decoration: none;
     margin: 0;
     padding: 0;
-    font-family: NewOrderLight;
+    font-family: NewOrderLight, Helvetica, sans-serif;
   }
   h1 {
     font-size: 2rem;
