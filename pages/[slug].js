@@ -34,16 +34,11 @@ export default function DetailPage({ artworkData, deviceType }) {
   }
 
   useEffect(() => {
-    const titelbildData = Titelbild.data.attributes.formats;
+    const titelbildData = Titelbild.data.attributes;
 
     const titleImgForGallery = {
-      thumbnail: titelbildData.thumbnail,
-      original:
-        deviceType === "large" && titelbildData.large
-          ? titelbildData.large.url
-          : deviceType === "mobile" && titelbildData.small
-          ? titelbildData.small.url
-          : titelbildData.medium.url,
+      thumbnail: titelbildData.formats.thumbnail.url,
+      original: titelbildData.url,
       originalAlt: Beschreibung,
     };
 
@@ -51,16 +46,10 @@ export default function DetailPage({ artworkData, deviceType }) {
       if (!image) {
         return null;
       }
-      const imgData = image.attributes.formats;
 
       return {
-        thumbnail: imgData.thumbnail.url,
-        original:
-          deviceType === "large" && imgData.large
-            ? imgData.large.url
-            : deviceType === "mobile" && imgData.small
-            ? imgData.small.url
-            : imgData.medium.url,
+        thumbnail: image.attributes.formats.thumbnail.url,
+        original: image.attributes.url,
         originalAlt: Beschreibung,
       };
     });
@@ -71,48 +60,18 @@ export default function DetailPage({ artworkData, deviceType }) {
     ]);
 
     const titleImageForDesktop = {
-      url:
-        deviceType === "large" && titelbildData.large
-          ? titelbildData.large.url
-          : deviceType === "mobile" && titelbildData.small
-          ? titelbildData.small.url
-          : titelbildData.medium.url,
-      width:
-        deviceType === "large" && titelbildData.large
-          ? titelbildData.large.width
-          : deviceType === "mobile" && titelbildData.small
-          ? titelbildData.small.width
-          : titelbildData.medium.width,
-      height:
-        deviceType === "large" && titelbildData.large
-          ? titelbildData.large.height
-          : deviceType === "mobile" && titelbildData.small
-          ? titelbildData.small.height
-          : titelbildData.medium.height,
+      url: titelbildData.url,
+      width: titelbildData.width,
+      height: titelbildData.height,
       alt: Beschreibung,
     };
 
     const otherImagesForDesktop = Bilder.data.map((image) => {
-      const imgData = image.attributes.formats;
+      const imgData = image.attributes;
       return {
-        url:
-          deviceType === "large" && imgData.large
-            ? imgData.large.url
-            : deviceType === "mobile" && imgData.small
-            ? imgData.small.url
-            : imgData.medium.url,
-        width:
-          deviceType === "large" && imgData.large
-            ? imgData.large.width
-            : deviceType === "mobile" && imgData.small
-            ? imgData.small.width
-            : imgData.medium.width,
-        height:
-          deviceType === "large" && imgData.large
-            ? imgData.large.height
-            : deviceType === "mobile" && imgData.small
-            ? imgData.small.height
-            : imgData.medium.height,
+        url: imgData.url,
+        width: imgData.width,
+        height: imgData.height,
         alt: Beschreibung,
       };
     });
@@ -339,6 +298,10 @@ export async function getStaticProps({ params }) {
                 data {
                   attributes {
                     formats
+                    url
+                    width
+                    height
+                    hash
                   }
                 }
               }
@@ -346,6 +309,10 @@ export async function getStaticProps({ params }) {
                 data {
                   attributes {
                     formats
+                    url
+                    width
+                    height
+                    hash
                   }
                 }
               }
