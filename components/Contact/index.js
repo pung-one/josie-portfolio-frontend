@@ -12,6 +12,10 @@ export default function Contact({ contactData }) {
       >
         Instagram
       </StyledLink>
+      <WebsiteCredits>Website designed & developed by:</WebsiteCredits>
+      <StyledLink href={"https://github.com/pung-one/"} target="_blank">
+        https://github.com/pung-one/
+      </StyledLink>
     </ContactContainer>
   );
 }
@@ -37,4 +41,8 @@ const StyledLink = styled(Link)`
     background-color: black;
     transform: scaleX(1);
   }
+`;
+
+const WebsiteCredits = styled.p`
+  margin-top: 10vh;
 `;
