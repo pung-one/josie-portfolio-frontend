@@ -36,16 +36,9 @@ export default function Home({ posts, deviceType }) {
   useEffect(() => {
     setArtworks(
       posts.sort(SortContent).map(({ attributes }) => {
-        const titleImage = attributes.Titelbild.data.attributes.formats;
-
         return {
           slug: attributes.slug,
-          titleImage:
-            deviceType === "desktop" && titleImage.large
-              ? titleImage.large
-              : deviceType === "mobile" && titleImage.small
-              ? titleImage.small
-              : titleImage.medium,
+          titleImage: attributes.Titelbild.data.attributes,
         };
       })
     );
@@ -158,7 +151,10 @@ export async function getStaticProps() {
                 Titelbild {
                   data {
                     attributes {
-                      formats
+                      url
+                      width
+                      height
+                      hash
                     }
                   }
                 }
@@ -169,6 +165,7 @@ export async function getStaticProps() {
       `,
     });
     if (error || !data) {
+      console.log(error);
       return { notFound: true };
     }
     return {
@@ -177,6 +174,7 @@ export async function getStaticProps() {
       },
     };
   } catch (error) {
+    console.log(error);
     return { notFound: true };
   }
 }
