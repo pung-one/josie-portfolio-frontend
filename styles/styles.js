@@ -21,6 +21,7 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     font-weight: lighter;
     font-family: NewOrderLight, Helvetica, sans-serif;
+    scroll-behavior: smooth;
   }
   h1 {
     font-size: 2rem;
