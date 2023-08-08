@@ -106,7 +106,7 @@ export async function getStaticProps() {
             }
           }
         }
-        ausbildungs {
+        ausbildungs(pagination: { limit: 9999 }) {
           data {
             attributes {
               von
@@ -116,7 +116,7 @@ export async function getStaticProps() {
             }
           }
         }
-        exhibitions {
+        exhibitions(pagination: { limit: 9999 }) {
           data {
             attributes {
               Jahr
@@ -125,7 +125,7 @@ export async function getStaticProps() {
             }
           }
         }
-        kommendeAusstellungens {
+        kommendeAusstellungens(pagination: { limit: 9999 }) {
           data {
             attributes {
               Jahr
@@ -134,7 +134,7 @@ export async function getStaticProps() {
             }
           }
         }
-        sounddesigns {
+        sounddesigns(pagination: { limit: 9999 }) {
           data {
             attributes {
               Jahr

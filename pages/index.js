@@ -143,7 +143,7 @@ export async function getStaticProps() {
     const { data, error } = await client.query({
       query: gql`
         query {
-          artworks {
+          artworks(pagination: { limit: 9999 }) {
             data {
               attributes {
                 slug
