@@ -14,8 +14,6 @@ export default function InfoPage({ aboutData, deviceType }) {
   const [educationData, setEducationData] = useState([]);
   const [workData, setWorkData] = useState({});
 
-  console.log(aboutData);
-
   const [showInfo, setShowInfo] = useState("about-me");
   function handleShowInfo(info) {
     setShowInfo(info);
