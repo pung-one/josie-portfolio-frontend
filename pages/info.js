@@ -14,6 +14,8 @@ export default function InfoPage({ aboutData, deviceType }) {
   const [educationData, setEducationData] = useState([]);
   const [workData, setWorkData] = useState({});
 
+  console.log(aboutData);
+
   const [showInfo, setShowInfo] = useState("about-me");
   function handleShowInfo(info) {
     setShowInfo(info);
@@ -106,7 +108,7 @@ export async function getStaticProps() {
             }
           }
         }
-        ausbildungs {
+        ausbildungs(pagination: { limit: 9999 }) {
           data {
             attributes {
               von
@@ -116,7 +118,7 @@ export async function getStaticProps() {
             }
           }
         }
-        exhibitions {
+        exhibitions(pagination: { limit: 9999 }) {
           data {
             attributes {
               Jahr
@@ -125,7 +127,7 @@ export async function getStaticProps() {
             }
           }
         }
-        kommendeAusstellungens {
+        kommendeAusstellungens(pagination: { limit: 9999 }) {
           data {
             attributes {
               Jahr
@@ -134,7 +136,7 @@ export async function getStaticProps() {
             }
           }
         }
-        sounddesigns {
+        sounddesigns(pagination: { limit: 9999 }) {
           data {
             attributes {
               Jahr
