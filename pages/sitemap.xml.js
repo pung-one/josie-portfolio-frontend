@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 import client from "@/apollo-client";
 
 function generateSiteMap(pages) {
-  const baseURL = "https://josie-portfolio-frontend.vercel.app";
+  const baseURL = "https://www.josie-overton.de";
   const pageURLs = pages.map((page) => `${baseURL}${page}`);
 
   return `<?xml version="1.0" encoding="UTF-8"?>
