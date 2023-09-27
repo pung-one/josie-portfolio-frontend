@@ -5,6 +5,12 @@ const GlobalStyle = createGlobalStyle`
   @font-face {
   font-family: "NewOrderLight";
   src: local("NewOrderLight"), url("./fonts/New-Order-Light.otf");
+  font-weight: lighter;
+  }
+  @font-face {
+  font-family: "NewOrderLight";
+  src: local("NewOrderLight"), url("./fonts/NewOrder-Medium.ttf") format('truetype');
+  font-weight: bold;
   }
 
   
@@ -22,6 +28,9 @@ const GlobalStyle = createGlobalStyle`
     font-weight: lighter;
     font-family: NewOrderLight, Helvetica, sans-serif;
     scroll-behavior: smooth;
+  }
+  strong {
+    font-weight: bold;
   }
   h1 {
     font-size: 2rem;

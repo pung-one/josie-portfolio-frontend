@@ -1,5 +1,3 @@
-import { gql } from "@apollo/client";
-import client from "@/apollo-client";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import Image from "next/image";
@@ -7,8 +5,9 @@ import Link from "next/link";
 import SortContent from "@/utils/SortContent";
 import React from "react";
 import { TfiAngleDown } from "react-icons/tfi";
+const contentful = require("contentful");
 
-export default function Home({ posts, deviceType }) {
+export default function Home({ data, deviceType }) {
   const [artworks, setArtworks] = useState([]);
   const [showArrow, setShowArrow] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -34,14 +33,7 @@ export default function Home({ posts, deviceType }) {
   }, [lastScrollY]);
 
   useEffect(() => {
-    setArtworks(
-      posts.sort(SortContent).map(({ attributes }) => {
-        return {
-          slug: attributes.slug,
-          titleImage: attributes.Titelbild.data.attributes,
-        };
-      })
-    );
+    setArtworks(data.sort(SortContent));
   }, [deviceType]);
 
   if (!artworks.length === 0) return <LoadingMessage>Loading..</LoadingMessage>;
@@ -49,16 +41,16 @@ export default function Home({ posts, deviceType }) {
   return (
     <PageContainer>
       {artworks?.map((artwork) => {
-        const { url, width, height } = artwork.titleImage;
+        const { url, details } = artwork.titleImage.fields.file;
         return (
-          <React.Fragment key={artwork.titleImage.hash}>
+          <React.Fragment key={artwork.slug}>
             <ArtworkSection>
               <Link href={`${artwork.slug}`}>
                 <StyledImage
                   alt={artwork.slug}
-                  src={url}
-                  width={width}
-                  height={height}
+                  src={`https:${url}`}
+                  width={details.image.width}
+                  height={details.image.height}
                   $isOnPortraitViewport={
                     deviceType === "mobile" || deviceType === "tablet"
                   }
@@ -139,42 +131,31 @@ const StyledImage = styled(Image)`
 `;
 
 export async function getStaticProps() {
-  try {
-    const { data, error } = await client.query({
-      query: gql`
-        query {
-          artworks(pagination: { limit: 9999 }) {
-            data {
-              attributes {
-                slug
-                reihenfolge
-                Titelbild {
-                  data {
-                    attributes {
-                      url
-                      width
-                      height
-                      hash
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      `,
-    });
-    if (error || !data) {
-      console.log(error);
+  const client = contentful.createClient({
+    space: process.env.CONTENTFUL_SPACE_ID,
+    accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
+  });
+
+  const entries = await client
+    .getEntries({
+      content_type: "artwork",
+    })
+    .catch((e) => {
+      console.log(e);
       return { notFound: true };
-    }
+    });
+
+  const artworks = entries.items.map((entry) => {
     return {
-      props: {
-        posts: data.artworks.data,
-      },
+      titleImage: entry.fields.titleImage,
+      slug: entry.fields.slug,
+      reihenfolge: entry.fields.reihenfolge,
     };
-  } catch (error) {
-    console.log(error);
-    return { notFound: true };
-  }
+  });
+
+  return {
+    props: {
+      data: artworks,
+    },
+  };
 }

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.15",
+    "contentful": "^10.5.2",
     "eslint": "8.42.0",
     "eslint-config-next": "13.4.5",
     "graphql": "^16.6.0",
@@ -20,6 +21,8 @@
     "react-image-gallery": "^1.2.12",
     "react-markdown": "^8.0.7",
     "react-uuid": "^2.0.0",
+    "remark-breaks": "^4.0.0",
+    "remark-gfm": "^4.0.0",
     "styled-components": "^5.3.11"
   }
 }
