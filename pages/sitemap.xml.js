@@ -1,6 +1,3 @@
-import { gql } from "@apollo/client";
-import client from "@/apollo-client";
-
 function generateSiteMap(pages) {
   const baseURL = "https://www.josie-overton.de";
   const pageURLs = pages.map((page) => `${baseURL}${page}`);
@@ -30,24 +27,24 @@ function generateSiteMap(pages) {
 }
 
 function SiteMap() {}
-
 export async function getServerSideProps({ res }) {
   try {
-    const { data } = await client.query({
-      query: gql`
-        query {
-          artworks(filters: { publishedAt: { notNull: true } }) {
-            data {
-              attributes {
-                slug
-              }
-            }
-          }
-        }
-      `,
+    const contentful = require("contentful");
+
+    const client = contentful.createClient({
+      space: process.env.CONTENTFUL_SPACE_ID,
+      accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
     });
 
-    const pages = data.artworks.data.map((item) => `/${item.attributes.slug}`);
+    const entries = await client
+      .getEntries({
+        content_type: "artwork",
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+
+    const pages = entries.items.map((item) => `/${item.fields.slug}`);
     const sitemap = generateSiteMap(pages);
 
     res.setHeader("Content-Type", "text/xml");
