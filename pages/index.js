@@ -5,7 +5,6 @@ import Link from "next/link";
 import SortContent from "@/utils/SortContent";
 import React from "react";
 import { TfiAngleDown } from "react-icons/tfi";
-const contentful = require("contentful");
 
 export default function Home({ data, deviceType }) {
   const [artworks, setArtworks] = useState([]);
@@ -131,6 +130,8 @@ const StyledImage = styled(Image)`
 `;
 
 export async function getStaticProps() {
+  const contentful = require("contentful");
+
   const client = contentful.createClient({
     space: process.env.CONTENTFUL_SPACE_ID,
     accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
