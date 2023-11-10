@@ -6,7 +6,21 @@ import Link from "next/link";
 export default function AboutMe({ aboutMe }) {
   if (!aboutMe.portfolioPDF?.fields.file.url) return <h1>Loading..</h1>;
 
-  console.log(aboutMe);
+  const ausbildungs = aboutMe.ausbildungs.map((ausbi) => {
+    const match = ausbi.match(/(\d{4}\s*-\s*\S+)(.+)/);
+
+    if (match) {
+      const time = match[1].trim();
+      const place = match[2].trim();
+
+      return { time, place };
+    } else {
+      console.error(`Unable to parse: ${item}`);
+      return null;
+    }
+  });
+
+  console.log(ausbildungs);
 
   return (
     <AboutMeContainer>
@@ -24,9 +38,14 @@ export default function AboutMe({ aboutMe }) {
       </section>
       <h2>Ausbildung</h2>
       <Education>
-        {aboutMe.ausbildungs.map((edu) => (
-          <EduSection key={edu}>{edu}</EduSection>
-        ))}
+        <tbody>
+          {ausbildungs.map((edu, index) => (
+            <tr key={edu.place + index}>
+              <YearTd>{edu.time}</YearTd>
+              <PlaceTd>{edu.place}</PlaceTd>
+            </tr>
+          ))}
+        </tbody>
       </Education>
     </AboutMeContainer>
   );
@@ -54,24 +73,17 @@ const StyledLink = styled(Link)`
   }
 `;
 
-const Education = styled.aside`
-  display: flex;
-  flex-direction: column;
-  gap: 50px;
+const Education = styled.table`
+  border-spacing: 10px 50px;
+  margin: -50px 0;
+  td {
+    vertical-align: top;
+  }
 `;
 
-const EduSection = styled.div`
-  display: flex;
+const YearTd = styled.td`
+  text-align: left;
 `;
-
-const EduTime = styled.section`
-  display: flex;
-  justify-content: space-between;
-  padding: 0 3vw 0 0;
-  width: 30%;
-`;
-
-const EduPlace = styled.p`
-  padding: 0 20px;
-  width: 70%;
+const PlaceTd = styled.td`
+  text-align: right;
 `;

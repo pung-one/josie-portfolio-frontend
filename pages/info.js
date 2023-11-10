@@ -62,7 +62,7 @@ const PageContainer = styled.main`
 
 const InfoContainer = styled.section`
   width: ${({ $isOnDesktop }) => ($isOnDesktop ? "62%" : "100%")};
-  padding: ${({ $isOnDesktop }) => ($isOnDesktop ? "0 20px" : "0 5vw")};
+  padding: ${({ $isOnDesktop }) => ($isOnDesktop ? "0 20px" : "0 3.5vw")};
 `;
 
 export async function getStaticProps() {
