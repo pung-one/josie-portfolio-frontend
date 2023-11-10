@@ -1,11 +1,11 @@
-import { gql } from "@apollo/client";
-import client from "@/apollo-client";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import ReactImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
 import { TfiAngleLeft, TfiAngleRight } from "react-icons/tfi";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import remarkBreaks from "remark-breaks";
+import remarkGfm from "remark-gfm";
 import ImageContainer from "@/components/ImageContainer";
 import uuid from "react-uuid";
 import { TfiArrowLeft } from "react-icons/tfi";
@@ -16,14 +16,8 @@ export default function DetailPage({ artworkData, deviceType }) {
   const [imagesForMobileGallery, setImagesForMobileGallery] = useState([]);
   const [imagesForDesktop, setImagesForDesktop] = useState([]);
 
-  const {
-    Titel,
-    Titelbild,
-    Bilder,
-    Beschreibung,
-    BegleittextDeu,
-    BegleittextEng,
-  } = artworkData.attributes;
+  const { title, titleImage, images, beschreibung, textGer, textEng } =
+    artworkData;
 
   function handleToggleLanguage() {
     if (language === "english") {
@@ -34,47 +28,52 @@ export default function DetailPage({ artworkData, deviceType }) {
   }
 
   useEffect(() => {
-    const titelbildData = Titelbild.data.attributes;
+    const titelbildData = titleImage.fields.file;
 
     const titleImgForGallery = {
-      thumbnail: titelbildData.formats.thumbnail.url,
+      thumbnail: titelbildData.url,
       original: titelbildData.url,
-      originalAlt: Beschreibung,
+      originalAlt: beschreibung,
     };
 
-    const otherImagesForGallery = Bilder.data.map((image) => {
-      if (!image) {
-        return null;
-      }
+    const titleImageForDesktop = {
+      url: titelbildData.url,
+      width: titelbildData.details.image.width,
+      height: titelbildData.details.image.height,
+      alt: beschreibung,
+    };
 
-      return {
-        thumbnail: image.attributes.formats.thumbnail.url,
-        original: image.attributes.url,
-        originalAlt: Beschreibung,
-      };
-    });
+    let otherImagesForGallery = [];
+    let otherImagesForDesktop = [];
+
+    if (images) {
+      otherImagesForGallery = images.map((image) => {
+        if (!image) {
+          return null;
+        }
+
+        return {
+          thumbnail: image.fields.file.url,
+          original: image.fields.file.url,
+          originalAlt: beschreibung,
+        };
+      });
+
+      otherImagesForDesktop = images.map((image) => {
+        const imgData = image.fields.file;
+        return {
+          url: imgData.url,
+          width: imgData.details.image.width,
+          height: imgData.details.image.height,
+          alt: beschreibung,
+        };
+      });
+    }
 
     setImagesForMobileGallery([
       { ...titleImgForGallery },
       ...otherImagesForGallery,
     ]);
-
-    const titleImageForDesktop = {
-      url: titelbildData.url,
-      width: titelbildData.width,
-      height: titelbildData.height,
-      alt: Beschreibung,
-    };
-
-    const otherImagesForDesktop = Bilder.data.map((image) => {
-      const imgData = image.attributes;
-      return {
-        url: imgData.url,
-        width: imgData.width,
-        height: imgData.height,
-        alt: Beschreibung,
-      };
-    });
 
     setImagesForDesktop([
       { ...titleImageForDesktop },
@@ -141,11 +140,13 @@ export default function DetailPage({ artworkData, deviceType }) {
         )}
       </GalleryContainer>
       <DetailsContainer $isOnDesktop={deviceType === "desktop"}>
-        <Title>{Titel}</Title>
+        <Title>{title}</Title>
         <Description>
-          <ReactMarkdown>{Beschreibung}</ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[remarkBreaks, remarkGfm]}>
+            {beschreibung}
+          </ReactMarkdown>
           <br />
-          {BegleittextDeu !== "none" ? (
+          {textGer && (
             <Text>
               <ButtonContainer>
                 <LanguageButton
@@ -158,12 +159,10 @@ export default function DetailPage({ artworkData, deviceType }) {
                 </LanguageButton>
               </ButtonContainer>
               <br />
-              <ReactMarkdown>
-                {language === "german" ? BegleittextDeu : BegleittextEng}
+              <ReactMarkdown remarkPlugins={[remarkBreaks, remarkGfm]}>
+                {language === "german" ? textGer : textEng}
               </ReactMarkdown>
             </Text>
-          ) : (
-            ""
           )}
         </Description>
       </DetailsContainer>
@@ -259,83 +258,46 @@ const Title = styled.h1`
   max-width: 400px;
 `;
 
-export async function getStaticPaths() {
-  const { data } = await client.query({
-    query: gql`
-      query {
-        artworks(filters: { publishedAt: { notNull: true } }) {
-          data {
-            attributes {
-              slug
-            }
-          }
-        }
-      }
-    `,
+const fetchForEntries = async () => {
+  const contentful = require("contentful");
+
+  const client = contentful.createClient({
+    space: process.env.CONTENTFUL_SPACE_ID,
+    accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
   });
+
+  const entries = await client
+    .getEntries({
+      content_type: "artwork",
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+
+  return entries;
+};
+
+export async function getStaticPaths() {
+  const entries = await fetchForEntries();
+
   return {
-    paths: data.artworks.data.map((item) => ({
-      params: { slug: item.attributes.slug },
+    paths: entries.items.map((entry) => ({
+      params: { slug: entry.fields.slug },
     })),
     fallback: false,
   };
 }
 
 export async function getStaticProps({ params }) {
-  try {
-    const { data, error } = await client.query({
-      query: gql`
-      query {
-        artworks (
-            sort: "publishedAt:desc"
-            pagination: { limit: 1 }
-            filters: { slug: { eq: "${params.slug}" } }
-          )  {
-          data {
-            attributes {
-              Titel
-              Titelbild {
-                data {
-                  attributes {
-                    formats
-                    url
-                    width
-                    height
-                    hash
-                  }
-                }
-              }
-              Bilder {
-                data {
-                  attributes {
-                    formats
-                    url
-                    width
-                    height
-                    hash
-                  }
-                }
-              }
-            Beschreibung
-            BegleittextDeu
-            BegleittextEng
-            }
-          }
-        }
-      }
-    `,
-    });
+  const entries = await fetchForEntries();
 
-    if (error || !data) {
-      return { notFound: true };
-    }
+  const artwork = entries.items.find(
+    (entry) => entry.fields.slug === params.slug
+  );
 
-    return {
-      props: {
-        artworkData: data.artworks.data[0],
-      },
-    };
-  } catch (error) {
-    return { notFound: true };
-  }
+  return {
+    props: {
+      artworkData: artwork.fields,
+    },
+  };
 }

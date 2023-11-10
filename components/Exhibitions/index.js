@@ -1,43 +1,27 @@
 import styled from "styled-components";
 import uuid from "react-uuid";
-import SortContent from "@/utils/SortContent";
 
 export default function Exhibitions({ workData }) {
   return (
     <ExhibitionsContainer>
-      {workData?.upcomingExhibitions[0] && (
+      {workData?.upcomingExhi && (
         <ExhiContainer id="upcoming">
           <ExhiHeadline>Upcoming Exhibtions</ExhiHeadline>
-          {workData.upcomingExhibitions.sort(SortContent).map((exhi) => {
-            return (
-              <ExhiSection key={uuid()}>
-                <ExhiYear>{exhi.attributes.Jahr}</ExhiYear>
-                <ExhiPlace>{exhi.attributes.Ausstellung}</ExhiPlace>
-              </ExhiSection>
-            );
+          {workData.upcomingExhi.map((exhi) => {
+            return <ExhiSection key={uuid()}>{exhi}</ExhiSection>;
           })}
         </ExhiContainer>
       )}
       <ExhiContainer id="exhibitions">
         <ExhiHeadline>Exhibitions</ExhiHeadline>
-        {workData.exhibitions.sort(SortContent).map((exhi) => {
-          return (
-            <ExhiSection key={uuid()}>
-              <ExhiYear>{exhi.attributes.Jahr}</ExhiYear>
-              <ExhiPlace>{exhi.attributes.Ausstellung}</ExhiPlace>
-            </ExhiSection>
-          );
+        {workData.exhibitions.map((exhi) => {
+          return <ExhiSection key={uuid()}>{exhi}</ExhiSection>;
         })}
       </ExhiContainer>
       <ExhiContainer id="sound">
         <ExhiHeadline>Sound Design</ExhiHeadline>
-        {workData.soundDesigns.sort(SortContent).map((exhi) => {
-          return (
-            <ExhiSection key={uuid()}>
-              <ExhiYear>{exhi.attributes.Jahr}</ExhiYear>
-              <ExhiPlace>{exhi.attributes.Location}</ExhiPlace>
-            </ExhiSection>
-          );
+        {workData.sounddesign.map((exhi) => {
+          return <ExhiSection key={uuid()}>{exhi}</ExhiSection>;
         })}
       </ExhiContainer>
     </ExhibitionsContainer>

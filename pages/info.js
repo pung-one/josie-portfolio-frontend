@@ -1,5 +1,3 @@
-import { gql } from "@apollo/client";
-import client from "@/apollo-client";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import AboutMe from "@/components/AboutMe";
@@ -9,35 +7,22 @@ import InfoNavDesktop from "@/components/InfoNavDesktop";
 import InfoNavMobile from "@/components/InfoNavMobile";
 
 export default function InfoPage({ aboutData, deviceType }) {
-  const [aboutMe, setAboutMe] = useState({});
+  const [aboutMeData, setAboutMeData] = useState({});
   const [contactData, setContactData] = useState({});
-  const [educationData, setEducationData] = useState([]);
   const [workData, setWorkData] = useState({});
-
   const [showInfo, setShowInfo] = useState("about-me");
+
   function handleShowInfo(info) {
     setShowInfo(info);
   }
 
   useEffect(() => {
-    setAboutMe({ ...aboutData.aboutMe.data.attributes });
-    setContactData({ ...aboutData.contact.data.attributes });
-    setEducationData([...aboutData.ausbildungs.data]);
-    setWorkData({
-      exhibitions: [...aboutData.exhibitions.data],
-      upcomingExhibitions: [...aboutData.kommendeAusstellungens.data],
-      soundDesigns: [...aboutData.sounddesigns.data],
-    });
+    setAboutMeData({ ...aboutData.aboutMeData });
+    setContactData({ ...aboutData.contactData });
+    setWorkData({ ...aboutData.exhibitionData });
   }, [aboutData]);
 
-  if (
-    !aboutMe ||
-    !contactData ||
-    !educationData ||
-    !workData ||
-    !workData.upcomingExhibitions
-  )
-    return <h1>Loading..</h1>;
+  if (!aboutMeData || !contactData || !workData) return <h1>Loading..</h1>;
 
   return (
     <PageContainer $isOnDesktop={deviceType === "desktop"}>
@@ -45,14 +30,14 @@ export default function InfoPage({ aboutData, deviceType }) {
         <InfoNavDesktop
           onShowInfo={handleShowInfo}
           showInfo={showInfo}
-          upcomingExists={workData?.upcomingExhibitions[0] !== undefined}
+          upcomingExists={workData?.upcomingExhi !== undefined}
         />
       ) : (
         <InfoNavMobile onShowInfo={handleShowInfo} showInfo={showInfo} />
       )}
       <InfoContainer $isOnDesktop={deviceType === "desktop"}>
         {showInfo === "about-me" ? (
-          <AboutMe aboutMe={aboutMe} educationData={educationData} />
+          <AboutMe aboutMe={aboutMeData} />
         ) : showInfo === "exhibitions" ? (
           <Exhibitions workData={workData} />
         ) : showInfo === "contact" ? (
@@ -81,71 +66,43 @@ const InfoContainer = styled.section`
 `;
 
 export async function getStaticProps() {
-  const { data, error } = await client.query({
-    query: gql`
-      query {
-        aboutMe {
-          data {
-            attributes {
-              personalData
-              Selbstbeschreibung
-              portfolioPDF {
-                data {
-                  attributes {
-                    url
-                  }
-                }
-              }
-            }
-          }
-        }
-        contact {
-          data {
-            attributes {
-              contactData
-            }
-          }
-        }
-        ausbildungs(pagination: { limit: 9999 }) {
-          data {
-            attributes {
-              von
-              bis
-              Ausbildung
-              reihenfolge
-            }
-          }
-        }
-        exhibitions(pagination: { limit: 9999 }) {
-          data {
-            attributes {
-              Jahr
-              Ausstellung
-              reihenfolge
-            }
-          }
-        }
-        kommendeAusstellungens(pagination: { limit: 9999 }) {
-          data {
-            attributes {
-              Jahr
-              Ausstellung
-              reihenfolge
-            }
-          }
-        }
-        sounddesigns(pagination: { limit: 9999 }) {
-          data {
-            attributes {
-              Jahr
-              Location
-              reihenfolge
-            }
-          }
-        }
-      }
-    `,
+  const contentful = require("contentful");
+
+  const client = contentful.createClient({
+    space: process.env.CONTENTFUL_SPACE_ID,
+    accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
   });
+
+  const aboutMeEntries = await client
+    .getEntries({
+      content_type: "aboutMe",
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+
+  const exhibitionEntries = await client
+    .getEntries({
+      content_type: "allExhibitions",
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+
+  const contactEntries = await client
+    .getEntries({
+      content_type: "contact",
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+
+  const data = {
+    aboutMeData: { ...aboutMeEntries.items[0].fields },
+    exhibitionData: { ...exhibitionEntries.items[0].fields },
+    contactData: { ...contactEntries.items[0].fields },
+  };
+
   return {
     props: {
       aboutData: data,

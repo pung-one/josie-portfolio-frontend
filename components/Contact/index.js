@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function Contact({ contactData }) {
   return (
     <ContactContainer>
-      <ReactMarkdown>{contactData.contactData}</ReactMarkdown>
+      <ReactMarkdown>{contactData.contactInfo}</ReactMarkdown>
       <StyledLink
         href={"https://www.instagram.com/d_josieoverton/"}
         target="_blank"

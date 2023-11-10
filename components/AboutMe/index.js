@@ -3,13 +3,15 @@ import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import SortContent from "@/utils/SortContent";
 import Link from "next/link";
 
-export default function AboutMe({ aboutMe, educationData }) {
-  if (!aboutMe.portfolioPDF?.data.attributes.url) return <h1>Loading..</h1>;
+export default function AboutMe({ aboutMe }) {
+  if (!aboutMe.portfolioPDF?.fields.file.url) return <h1>Loading..</h1>;
+
+  console.log(aboutMe);
 
   return (
     <AboutMeContainer>
       <StyledLink
-        href={aboutMe.portfolioPDF?.data.attributes.url}
+        href={`https:${aboutMe.portfolioPDF?.fields.file.url}`}
         target="_blank"
       >
         Download Portfolio
@@ -18,25 +20,12 @@ export default function AboutMe({ aboutMe, educationData }) {
         <ReactMarkdown>{aboutMe.personalData}</ReactMarkdown>
       </section>
       <section>
-        <ReactMarkdown>{aboutMe.Selbstbeschreibung}</ReactMarkdown>
+        <ReactMarkdown>{aboutMe.selfDescription}</ReactMarkdown>
       </section>
       <h2>Ausbildung</h2>
       <Education>
-        {educationData.sort(SortContent).map((edu) => (
-          <EduSection key={edu.attributes.Ausbildung}>
-            <EduTime>
-              {edu.attributes.von ? (
-                <>
-                  <p>{edu.attributes.von}</p>
-                  <p>-</p>
-                </>
-              ) : (
-                ""
-              )}
-              <p>{edu.attributes.bis}</p>
-            </EduTime>
-            <EduPlace>{edu.attributes.Ausbildung}</EduPlace>
-          </EduSection>
+        {aboutMe.ausbildungs.map((edu) => (
+          <EduSection key={edu}>{edu}</EduSection>
         ))}
       </Education>
     </AboutMeContainer>
