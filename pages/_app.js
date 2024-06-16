@@ -34,6 +34,7 @@ export default function App({ Component, pageProps }) {
       <GlobalStyle />
       <Head>
         <title>Josie Overton Portfolio</title>
+        <link rel="canonical" href="https://www.josie-overton.de/" />
         <link
           rel="apple-touch-icon"
           sizes="180x180"
