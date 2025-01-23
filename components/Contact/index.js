@@ -7,7 +7,7 @@ export default function Contact({ contactData }) {
     <ContactContainer>
       <ReactMarkdown>{contactData.contactInfo}</ReactMarkdown>
       <StyledLink
-        href={"https://www.instagram.com/d_josieoverton/"}
+        href={"https://www.instagram.com/josieoverton/"}
         target="_blank"
       >
         Instagram
