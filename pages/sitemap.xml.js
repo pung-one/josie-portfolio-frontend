@@ -1,5 +1,5 @@
 function generateSiteMap(pages) {
-  const baseURL = "https://www.josie-overton.de";
+  const baseURL = "https://www.josie-overton.com";
   const pageURLs = pages.map((page) => `${baseURL}${page}`);
 
   return `<?xml version="1.0" encoding="UTF-8"?>
